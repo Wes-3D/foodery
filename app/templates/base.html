@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Food{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+  
+  <!-- Navbar (always included) -->
+  <nav class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center">
+        <div class="flex-shrink-0 text-xl font-bold text-blue-600 px-12">
+          <a href="/" class="text-gray-700 hover:text-blue-600 text-lg">Food</a>
+        </div>
+        <div class="hidden md:flex space-x-6">
+          <a href="/add_product" class="text-gray-700 hover:text-blue-600 text-lg font-medium px-8 py-4">Products</a>
+          <!--a href="/matchups" class="text-gray-700 hover:text-blue-600 text-lg font-medium px-8 py-4">Matchups</a>
+
+          <a href="/rosters" class="text-gray-700 hover:text-blue-600 text-lg font-medium px-8 py-4">Rosters</a>
+          <a href="/ratings" class="text-gray-700 hover:text-blue-600 text-lg font-medium px-8 py-4">Ratings</a-->
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page content -->
+  <div class="container mx-auto mt-6 px-4">
+    {% block content %}{% endblock %}
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const path = window.location.pathname;
+      const links = document.querySelectorAll("nav a");
+      links.forEach(link => {
+        if (link.getAttribute("href") === path) {
+          link.classList.add("text-blue-600", "font-bold", "border-b-2", "border-blue-600");
+          link.classList.remove("text-gray-700");
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

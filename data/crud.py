@@ -12,6 +12,8 @@ def create_recipe(db: Session, recipe: schemas.RecipeCreate):
         name=recipe.name,
         description=recipe.description,
         servings=recipe.servings,
+        time_prep=recipe.time_prep,
+        time_cook=recipe.time_cook,
     )
     db.add(db_recipe)
     db.commit()

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Inventory{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6 text-center">Inventory</h1>
+<h3 class="text-2xl font-bold mb-6 text-center">
+    <a href="/add_product" class="text-gray-700 hover:text-blue-600 text-lg font-medium px-8 py-4">Add Product</a>
+    <a href="/ingredients" class="text-gray-700 hover:text-blue-600 text-lg font-medium px-8 py-4">API Feed</a>
+</h3>
+
+<div class="overflow-x-auto shadow rounded-lg">
+    <table class="min-w-full bg-white border border-gray-200">
+        <thead class="bg-gray-100 text-gray-700 uppercase text-xs text-left">
+            <tr>
+                <th class="px-4 py-2">ID</th>
+                <th class="px-4 py-2">Ingredient</th>
+                <th class="px-4 py-2">Code</th>
+                <th class="px-4 py-2">Unit</th>
+                <th class="px-4 py-2">Qty</th>
+                <th class="px-4 py-2">Weight (g)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in ingredients %}
+            <tr class="border-t hover:bg-gray-50">
+                <td class="px-4 py-2">{{ r.product_id }}</td>
+                <td class="px-4 py-2">{{ r.name }}</td>
+                <td class="px-4 py-2">{{ r.code }}</td>
+                <td class="px-4 py-2">{{ r.volumeUnit }}</td>
+                <td class="px-4 py-2">{{ r.volumeQty }}</td>
+                <td class="px-4 py-2">{{ r.weightGram }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Convert the Jinja variable into JSON for JavaScript
+    const dataset = {{ ingredients | tojson }};
+    console.log("ingredients dataset:", dataset);
+
+</script>
+
+
+{% endblock %}

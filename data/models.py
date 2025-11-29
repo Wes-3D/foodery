@@ -27,9 +27,6 @@ class Product(Base):
 
     recipes = relationship("RecipeIngredient", back_populates="ingredient")
 
-"""
-    def __init__(self, name):
-        self.name = name
     def to_dict(self):
         return {
             'product_id': self.id,
@@ -37,30 +34,43 @@ class Product(Base):
             'name': self.name,
             'volumeUnit': self.volumeUnit,
             'volumeQty': self.volumeQty,
-            'weightGram': self.weightGram
+            'weightGram': self.weightGram if self.weightGram else ""
         }
-"""
+
+    """
+    def __init__(self, name):
+        self.name = name
+    """
 
 class Recipe(Base):
     __tablename__ = "recipes"
 
     id = Column(Integer, primary_key=True, index=True)
-    #title = Column(String, index=True)
-    name = Column(String, unique=True, nullable=False)
+    name = Column(String, unique=True, nullable=False) #, index=True
     description = Column(String)
     servings = Column(Integer, default=1)
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     #cook_method = Column(String, nullable=True)
-    #time_perform = Column(Integer, default=1, nullable=True)
-    #time_prep = Column(Integer, default=1, nullable=True)
-    #time_cook = Column(Integer, default=1, nullable=True)
-    #time_total = Column(Integer, default=1, nullable=True)
+    ##time_perform = Column(Integer, default=1, nullable=True)
+    time_prep = Column(Integer, default=5, nullable=True)
+    time_cook = Column(Integer, default=5, nullable=True)
+    #time_total = Column(Integer, default=10, nullable=True)
 
     owner = relationship("User", back_populates="recipes")
     ingredients = relationship("RecipeIngredient", back_populates="recipe", cascade="all, delete-orphan")
     steps = relationship("RecipeStep", back_populates="recipe", cascade="all, delete-orphan")
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "servings": self.servings,
+            "time_prep": self.time_prep if self.time_prep else 5,
+            "time_cook": self.time_cook if self.time_cook else 5,
+            #"time_total": self.time_cook + self.time_prep,
+        }
 
 class RecipeIngredient(Base):
     __tablename__ = "recipe_ingredients"

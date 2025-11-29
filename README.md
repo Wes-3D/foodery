@@ -20,3 +20,11 @@ Prerequisites: uv
 
         uv sync
         uv run main.py
+
+
+
+### Migration
+
+        uv run alembic revision --autogenerate -m ""
+        uv run alembic upgrade head
+

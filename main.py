@@ -1,5 +1,7 @@
 from fastapi import FastAPI, Request, Query, Depends, BackgroundTasks, Form, HTTPException
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 import uvicorn
 import os
@@ -17,6 +19,7 @@ models.Base.metadata.create_all(bind=engine)
 setup_logging()
 logger = logging.getLogger(__name__)
 
+templates = Jinja2Templates(directory="assets/templates")
 app = FastAPI()
 #app.mount("/json", StaticFiles(directory="json", html=True), name="root")
 app.include_router(router_scan)
@@ -58,6 +61,10 @@ def read_recipe(recipe_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Recipe not found")
     return db_recipe
 
+
+@app.get("/example", response_class=HTMLResponse)
+def index(request: Request):
+    return templates.TemplateResponse("example.html", {"request": request})
 
 
 if __name__ == "__main__":

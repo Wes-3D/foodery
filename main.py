@@ -8,24 +8,17 @@ import logging
 from core.log import setup_logging
 from app.scan import router_scan
 
-
-#from data import models, schemas, crud
-
 from data import schemas, crud, models
 from data.db import get_db, SessionLocal, engine
 
-
 models.Base.metadata.create_all(bind=engine)
-
 
 # Initialize logging early
 setup_logging()
 logger = logging.getLogger(__name__)
 
-
 app = FastAPI()
-#app.mount("/site", StaticFiles(directory="www"), name="site")
-#app.mount("/json", StaticFiles(directory="www", html=True), name="root")
+#app.mount("/json", StaticFiles(directory="json", html=True), name="root")
 app.include_router(router_scan)
 
 
@@ -37,14 +30,20 @@ def create_ingredient(product: schemas.ProductCreate, db: Session = Depends(get_
     db.refresh(db_product)
     return db_product
 
+
+
 @app.get("/ingredients/", response_model=list[schemas.Product])
 def list_ingredients(db: Session = Depends(get_db)):
     return db.query(models.Product).all()
 
 
+
+
 @app.post("/recipes/", response_model=schemas.Recipe)
 def create_recipe(recipe: schemas.RecipeCreate, db: Session = Depends(get_db)):
     return crud.create_recipe(db=db, recipe=recipe)
+
+
 
 
 @app.get("/recipes/", response_model=list[schemas.Recipe])

@@ -11,4 +11,5 @@ wheels/
 
 *.log
 certs/
+assets/certs/
 json/

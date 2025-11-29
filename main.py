@@ -62,8 +62,8 @@ def read_recipe(recipe_id: int, db: Session = Depends(get_db)):
 
 
 if __name__ == "__main__":
-    ssl_keyfile = os.path.join("certs", "key.pem")
-    ssl_certfile = os.path.join("certs", "cert.pem")
+    ssl_keyfile = os.path.join("assets/certs", "key.pem")
+    ssl_certfile = os.path.join("assets/certs", "cert.pem")
     #uvicorn.run(app, host="0.0.0.0", port=5000)
     #uvicorn.run("app.main:app", host="0.0.0.0", port=5000, reload=True)
     uvicorn.run(app, host="0.0.0.0", port=5000, ssl_keyfile=ssl_keyfile, ssl_certfile=ssl_certfile)

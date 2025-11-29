@@ -10,7 +10,7 @@ from app.food import food_api
 
 #bp_scan = Blueprint('scan', __name__, template_folder='templates', static_folder='static')
 
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory="assets/templates")
 router_scan = APIRouter()
 
 

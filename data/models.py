@@ -27,6 +27,19 @@ class Product(Base):
 
     recipes = relationship("RecipeIngredient", back_populates="ingredient")
 
+"""
+    def __init__(self, name):
+        self.name = name
+    def to_dict(self):
+        return {
+            'product_id': self.id,
+            'code': self.code,
+            'name': self.name,
+            'volumeUnit': self.volumeUnit,
+            'volumeQty': self.volumeQty,
+            'weightGram': self.weightGram
+        }
+"""
 
 class Recipe(Base):
     __tablename__ = "recipes"

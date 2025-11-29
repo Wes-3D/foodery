@@ -1,18 +1,14 @@
-#from flask import Blueprint, render_template, request
 from fastapi import APIRouter, Request, Query, Depends, BackgroundTasks, UploadFile, File, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse
-
 import cv2
 from pyzbar.pyzbar import decode
 import numpy as np
-from app.food import food_api
 
-#bp_scan = Blueprint('scan', __name__, template_folder='templates', static_folder='static')
+from app.food import food_api
 
 templates = Jinja2Templates(directory="assets/templates")
 router_scan = APIRouter()
-
 
 
 @router_scan.get("/", response_class=HTMLResponse)

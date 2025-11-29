@@ -1,3 +1,8 @@
+Prerequisites: uv
+
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+
+
 1) Copy Repo
 
         git clone https://github.com/Wes-3D/foodery.git

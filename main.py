@@ -8,7 +8,7 @@ import os
 import logging
 
 from core.log import setup_logging
-from app.scan import router_scan
+from app.product_scan import router_scan
 
 from data import schemas, crud, models
 from data.db import get_db, SessionLocal, engine

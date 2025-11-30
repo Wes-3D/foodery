@@ -24,6 +24,9 @@ app = FastAPI()
 #app.mount("/json", StaticFiles(directory="json", html=True), name="root")
 app.include_router(router_scan)
 
+@app.get("/", response_class=HTMLResponse)
+def index(request: Request):
+    return templates.TemplateResponse("base.html", {"request": request})
 
 ### Ingredients ###
 
@@ -43,7 +46,7 @@ def list_ingredients(db: Session = Depends(get_db)):
 
 # HTML View All Ingredients
 @app.get("/inventory", response_class=HTMLResponse)
-def read_pantry(request: Request, db: Session = Depends(get_db)):
+def list_inventory(request: Request, db: Session = Depends(get_db)):
     #ingredients = db.query(models.Product).all()
     ingredients = [ingredient.to_dict() for ingredient in db.query(models.Product).all()]
     return templates.TemplateResponse("inventory.html", {"request": request, "ingredients": ingredients})
@@ -116,7 +119,7 @@ def read_recipe(recipe_id: int, db: Session = Depends(get_db)):
 
 # HTML View All Recipes
 @app.get("/cookbook", response_class=HTMLResponse)
-def read_cookbook(request: Request, db: Session = Depends(get_db)):
+def list_recipes(request: Request, db: Session = Depends(get_db)):
     #recipes = crud.get_recipes(db)
     recipes = [recipe.to_dict() for recipe in crud.get_recipes(db)]
     return templates.TemplateResponse("cookbook.html", {"request": request, "recipes": recipes})
@@ -124,7 +127,7 @@ def read_cookbook(request: Request, db: Session = Depends(get_db)):
 
 ### Squirrelf AI Example ###
 @app.get("/example", response_class=HTMLResponse)
-def index(request: Request):
+def example(request: Request):
     return templates.TemplateResponse("example.html", {"request": request})
 
 if __name__ == "__main__":

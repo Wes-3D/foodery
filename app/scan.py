@@ -5,17 +5,12 @@ import cv2
 from pyzbar.pyzbar import decode
 import numpy as np
 
-from app.food import food_api
+import openfoodfacts
+#SEARCH_CODE = "071012051007"
+food_api = openfoodfacts.API(user_agent="MyAwesomeApp/1.0", country=openfoodfacts.Country.us, timeout=10)
 
 templates = Jinja2Templates(directory="assets/templates")
 router_scan = APIRouter()
-
-
-@router_scan.get("/", response_class=HTMLResponse)
-async def index(request: Request):
-    return templates.TemplateResponse("base.html", {"request": request})
-
-
 
 @router_scan.get("/add_product", response_class=HTMLResponse)
 async def index(request: Request):
@@ -23,39 +18,25 @@ async def index(request: Request):
 
 
 @router_scan.post("/scan", response_class=HTMLResponse)
-async def scan(
-    request: Request,
-    file: UploadFile = File(...),
-):
+async def scan(request: Request, file: UploadFile = File(...)):
     product = None
     try:
-        # Read uploaded file
+        # Read uploaded file & Decode image
         contents = await file.read()
-
-        # Decode image
         image = cv2.imdecode(np.frombuffer(contents, np.uint8), cv2.IMREAD_UNCHANGED)
         barcodes = decode(image)
 
         if not barcodes:
-            return templates.TemplateResponse(
-                "scan.html",
-                {"request": request, "error": "Barcode not detected or is blank/corrupted!"},
-            )
+            return templates.TemplateResponse("scan.html", {"request": request, "error": "Barcode not detected or is blank/corrupted!"})
 
         # Decode first barcode found
         code_string = barcodes[0].data.decode("utf-8")
         product = food_api.product.get(code_string)
 
-        return templates.TemplateResponse(
-            "scan.html",
-            {"request": request, "code_string": code_string, "product": product},
-        )
+        return templates.TemplateResponse("scan.html", {"request": request, "code_string": code_string, "product": product})
 
     except Exception as e:
-        return templates.TemplateResponse(
-            "scan.html",
-            {"request": request, "error": f"Error: {str(e)}"},
-        )
+        return templates.TemplateResponse("scan.html", {"request": request, "error": f"Error: {str(e)}"})
 
 
 @router_scan.post("/lookup")

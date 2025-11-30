@@ -52,7 +52,6 @@ class Recipe(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     #cook_method = Column(String, nullable=True)
-    ##time_perform = Column(Integer, default=1, nullable=True)
     time_prep = Column(Integer, default=5, nullable=True)
     time_cook = Column(Integer, default=5, nullable=True)
     #time_total = Column(Integer, default=10, nullable=True)
@@ -90,6 +89,7 @@ class RecipeStep(Base):
     recipe_id = Column(Integer, ForeignKey("recipes.id"))
     step_number = Column(Integer, nullable=False)
     description = Column(Text, nullable=False)
+    ##time_perform = Column(Integer, default=1, nullable=True)
 
     recipe = relationship("Recipe", back_populates="steps")
 

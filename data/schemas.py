@@ -13,7 +13,7 @@ class ProductBase(BaseModel):
 class ProductCreate(ProductBase):
     pass
 
-class Product(ProductBase):
+class ProductSchema(ProductBase):
     id: int
     class Config:
         from_attributes = True
@@ -22,8 +22,11 @@ class Product(ProductBase):
 
 
 class RecipeIngredientBase(BaseModel):
-    ingredient_id: int
+    #ingredient_id: int
     quantity: float
+    name: str
+    unit: Optional[str] = None
+    method: Optional[str] = None
 
 class RecipeStepBase(BaseModel):
     step_number: int
@@ -38,7 +41,7 @@ class RecipeCreate(BaseModel):
     ingredients: List[RecipeIngredientBase]
     steps: List[RecipeStepBase]
 
-class Recipe(BaseModel):
+class RecipeSchema(BaseModel):
     id: int
     name: str
     description: Optional[str]

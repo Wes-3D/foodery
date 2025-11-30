@@ -23,8 +23,11 @@ def create_recipe(db: Session, recipe: schemas.RecipeCreate):
     for item in recipe.ingredients:
         db_ri = models.RecipeIngredient(
             recipe_id=db_recipe.id,
-            ingredient_id=item.ingredient_id,
-            quantity=item.quantity
+            #ingredient_id=item.ingredient_id,
+            quantity=item.quantity,
+            name=item.name,
+            unit=item.unit,
+            method=item.method
         )
         db.add(db_ri)
 
@@ -40,3 +43,21 @@ def create_recipe(db: Session, recipe: schemas.RecipeCreate):
     db.commit()
     db.refresh(db_recipe)
     return db_recipe
+
+"""
+def get_or_create_ingredient(db: Session, name: str):
+    ingredient = (
+        db.query(models.Product)
+        .filter(models.Product.name.ilike(name))
+        .first()
+    )
+
+    if ingredient:
+        return ingredient
+
+    ingredient = models.Product(name=name)
+    db.add(ingredient)
+    db.commit()
+    db.refresh(ingredient)
+    return ingredient
+"""

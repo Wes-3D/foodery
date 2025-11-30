@@ -11,7 +11,7 @@ templates = Jinja2Templates(directory="assets/templates")
 router_scan = APIRouter()
 
 @router_scan.get("/add_product", response_class=HTMLResponse)
-async def index(request: Request):
+async def scan_product(request: Request):
     return templates.TemplateResponse("scan.html", {"request": request})
 
 

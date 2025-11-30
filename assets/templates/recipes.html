@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Recipes{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6 text-center">Recipes</h1>
+<h3 class="text-2xl font-bold mb-6 text-center">
+    <a href="/recipe-add" class="text-gray-700 hover:text-blue-600 text-lg font-medium px-8 py-4">Add Recipe</a>
+    <a href="/recipes" class="text-gray-700 hover:text-blue-600 text-lg font-medium px-8 py-4">API Feed</a>
+</h3>
+
+<div class="overflow-x-auto shadow rounded-lg">
+    <table id="tableRecipes" class="min-w-full bg-white border border-gray-200">
+        <thead class="bg-gray-100 text-gray-700 uppercase text-xs text-left">
+            <tr>
+                <th class="px-4 py-2">ID</th>
+                <th class="px-4 py-2">Recipe</th>
+                <th class="px-4 py-2">Description</th>
+                <th class="px-4 py-2">Servings</th>
+            </tr>
+        </thead>
+        <tbody id="bodyRecipes">
+            <!--tr class="border-t hover:bg-gray-50">
+                <td class="px-4 py-2">id</td>
+                <td class="px-4 py-2">name</td>
+                <td class="px-4 py-2">description</td>
+                <td class="px-4 py-2">servings</td>
+            </tr-->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Convert the Jinja variable into JSON for JavaScript
+    const dataRecipes = {{ recipes | tojson }};
+    console.log("Recipes Dataset:", dataRecipes);
+
+
+    async function populateRecipesTable() {
+        try {
+            const tableRecipes = document.getElementById('tableRecipes');
+            const bodyRecipes = document.getElementById('bodyRecipes');
+
+            bodyRecipes.innerHTML = '';
+
+            dataRecipes.forEach(function(recipe, index) {
+                if (recipe) {
+                    const row = bodyRecipes.insertRow();
+                    row.className = "border-t hover:bg-gray-50";
+                    const recipeCells = createRecipeRow(recipe, index);
+                    recipeCells.forEach(cell => row.appendChild(cell));
+                }
+            });
+
+
+            tableRecipes.appendChild(bodyRecipes);
+        } catch (error) {
+            console.error('Error rendering table:', error);
+        }
+    }
+
+    function createRecipeRow(data) {
+        const cells = [];
+        cells.push(createTextCell(data.name));
+        cells.push(createTextCell(data.id));
+        cells.push(createTextCell(data.description));
+        cells.push(createTextCell(data.servings));
+        //cells.push(createNumberCell(data.quantity));
+        return cells;
+    }
+
+    function createTextCell(content, style, nameClass, id) {
+        const cell = document.createElement('td');
+        cell.textContent = content || '';
+        cell.className = "px-4 py-2";
+        /*if (nameClass && nameClass.length > 0) {
+            cell.className = nameClass
+        }
+        if (style && style.length > 0) {
+            cell.style = style;
+        }
+        if (id) {
+            cell.id = id
+        }
+        */
+        return cell;
+    }
+
+
+
+    document.addEventListener('DOMContentLoaded', async function() {
+        await populateRecipesTable();
+    });
+
+</script>
+
+
+{% endblock %}

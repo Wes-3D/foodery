@@ -1,4 +1,4 @@
-**[Ingredients](ingredients.md)** (or Pantry/Products)
+**[Products](products.md)** (or Pantry/Ingredients)
 - keep track of inventory
 - need empty list to match from
 - nutrient information

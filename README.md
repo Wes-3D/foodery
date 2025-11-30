@@ -1,7 +1,8 @@
-Prerequisites: uv
+## Prerequisites: uv
 
         curl -LsSf https://astral.sh/uv/install.sh | sh
 
+## Install
 
 1) Copy Repo
 
@@ -22,8 +23,81 @@ Prerequisites: uv
         uv run main.py
 
 
+## Structure
 
-### Migration
+~/
+├─ main.py
+├─ app/
+│  ├─ products/
+│  │  ├─ routes.py
+│  │  └─ scan.py
+│  │
+│  └─ recipes/
+│     ├─ routes.py
+│     └─ scrape.py
+│
+├─ data/
+│  ├─ crud.py
+│  ├─ db.py
+│  ├─ models.py
+│  └─ schemas.py
+│
+└─ assets/
+   ├─ certs/
+   │  ├─ cert.pem
+   │  └─ key.pem
+   │
+   ├─ static/
+   │  ├─ css/
+   │  └─ js/
+   │
+   └─ templates/
+      ├─ base.html
+      ├─ cookbook.html
+      ├─ inventory.html
+      ├─ recipe-add.html
+      └─ scan.html
+
+
+### Alt
+app/
+│
+├── main.py
+├── core/
+│   └── log.py
+│
+├── api/
+│   ├── __init__.py
+│   ├── router.py
+│   ├── ingredients.py
+│   └── recipes.py
+│
+├── db/
+│   ├── __init__.py
+│   ├── base.py
+│   ├── session.py
+│   └── init_db.py
+│
+├── models/
+│   ├── __init__.py
+│   ├── product.py
+│   ├── recipe.py
+│   └── recipe_step.py
+│
+├── schemas/
+│   ├── __init__.py
+│   ├── product.py
+│   ├── recipe.py
+│   └── recipe_step.py
+│
+└── crud/
+    ├── __init__.py
+    ├── product.py
+    └── recipe.py
+
+
+
+## Migration
 
         uv run alembic revision --autogenerate -m ""
         uv run alembic upgrade head

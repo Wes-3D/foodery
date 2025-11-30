@@ -25,8 +25,12 @@ class Product(Base):
     brand = Column(String, nullable=True)
     category = Column(String, nullable=True)
 
-    recipes = relationship("RecipeIngredient", back_populates="ingredient")
+    #recipes = relationship("RecipeIngredient", back_populates="ingredient")
 
+    """
+    def __init__(self, name):
+        self.name = name
+    """
     def to_dict(self):
         return {
             'product_id': self.id,
@@ -37,10 +41,6 @@ class Product(Base):
             'weightGram': self.weightGram if self.weightGram else ""
         }
 
-    """
-    def __init__(self, name):
-        self.name = name
-    """
 
 class Recipe(Base):
     __tablename__ = "recipes"
@@ -76,11 +76,14 @@ class RecipeIngredient(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     recipe_id = Column(Integer, ForeignKey("recipes.id"))
-    ingredient_id = Column(Integer, ForeignKey("products.id"))
+    #ingredient_id = Column(Integer, ForeignKey("products.id"))
     quantity = Column(Float, nullable=False)
+    name = Column(String, nullable=False)
+    unit = Column(String, nullable=True)
+    method = Column(String, nullable=True)
 
     recipe = relationship("Recipe", back_populates="ingredients")
-    ingredient = relationship("Product", back_populates="recipes")
+    #ingredient = relationship("Product", back_populates="recipes")
 
 class RecipeStep(Base):
     __tablename__ = "recipe_steps"

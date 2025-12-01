@@ -8,8 +8,8 @@ templates = Jinja2Templates(directory="assets/templates")
 router_recipes = APIRouter()
 
 
-from data.db import get_db
-from data import models, schemas, crud
+from app.data.db import get_db
+from app.data import models, schemas, crud
 ### Recipes ###
 
 # Post Recipe

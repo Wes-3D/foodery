@@ -2,18 +2,17 @@ from fastapi import FastAPI, Request, Query, Depends, BackgroundTasks, Form, HTT
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from sqlalchemy.orm import Session
 import uvicorn
 import os
 import logging
 
 from app.log.log import setup_logging
-from app.products.product_scan import router_scan
+#from app.products.product_scan import router_scan
 from app.products.routes import router_products
 from app.recipes.routes import router_recipes
 
-from data import schemas, crud, models
-from data.db import get_db, SessionLocal, engine
+from app.data import models
+from app.data.db import engine
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -25,7 +24,7 @@ templates = Jinja2Templates(directory="assets/templates")
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="assets/static"), name="static")
 #app.mount("/json", StaticFiles(directory="json", html=True), name="root")
-app.include_router(router_scan)
+#app.include_router(router_scan)
 app.include_router(router_products)
 app.include_router(router_recipes)
 

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from data import models, schemas
+from app.data import models, schemas
 
 def get_recipe(db: Session, recipe_id: int):
     return db.query(models.Recipe).filter(models.Recipe.id == recipe_id).first()

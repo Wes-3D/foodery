@@ -10,7 +10,7 @@ def setup_logging():
         format="%(asctime)s [%(levelname)s] %(name)s - %(message)s",
         handlers=[
             logging.StreamHandler(sys.stdout),  # print to console
-            logging.FileHandler("app.log", mode="a", encoding="utf-8")  # write to file
+            logging.FileHandler("app/log/app.log", mode="a", encoding="utf-8")  # write to file
         ],
     )
 

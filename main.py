@@ -7,7 +7,7 @@ import uvicorn
 import os
 import logging
 
-from core.log import setup_logging
+from app.log.log import setup_logging
 from app.products.product_scan import router_scan
 from app.products.routes import router_products
 from app.recipes.routes import router_recipes

@@ -12,6 +12,6 @@ wheels/
 *.log
 certs/
 assets/certs/
-json/
+assets/json/
 .old/
 /assets/templates/alt/

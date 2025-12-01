@@ -1,34 +1,3 @@
-{% extends "base.html" %}
-{% block title %}Scan a Barcode{% endblock %}
-
-{% block content %}
-<!--h1>Enter a Barcode</h1-->
-<div>
-    <div id="divBarcode" style="float: left;width: 30%;">
-        <form id="barcodeForm">
-            <label for="barcode">Enter Barcode:</label>
-            <input type="text" id="barcode" name="barcode" required autofocus />
-            <button type="submit">Lookup</button>
-        </form>
-        <div id="status" style="margin-top: 1em; white-space: pre-line;"></div>
-    </div>
-
-    <div id="divProduct" style="float: left;width: 70%;">
-        <form id="productForm" method="POST" action="/ingredients/">
-            <label for="name">Product</label>
-            <input type="text" id="product_name" name="name" required />
-            <label for="brand">Brand</label>
-            <input type="text" id="product_brand" name="brand" required />
-            <label for="serving_qty">Serving Quantity</label>
-            <input type="text" id="serving_qty" name="serving_qty" required />
-            <label for="serving_unit">Serving Unit</label>
-            <input type="text" id="serving_unit" name="serving_unit" required />
-            <button type="submit">Save</button>
-        </form>
-    </div>
-</div>
-
-<script>
 
 const style = document.createElement("style");
 style.textContent = `
@@ -38,10 +7,9 @@ label, button {
 `;
 document.head.appendChild(style);
 
+
 document.getElementById("barcodeForm").addEventListener("submit", async (event) => {
     event.preventDefault();
-
-
 
     const code = document.getElementById("barcode").value.trim();
     const status = document.getElementById("status");
@@ -89,5 +57,3 @@ document.getElementById("barcodeForm").addEventListener("submit", async (event) 
         status.textContent = "Error contacting server.";
     }
 });
-</script>
-{% endblock %}

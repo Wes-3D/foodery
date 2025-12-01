@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 templates = Jinja2Templates(directory="assets/templates")
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="assets/static"), name="static")
 #app.mount("/json", StaticFiles(directory="json", html=True), name="root")
 app.include_router(router_scan)
 app.include_router(router_products)
@@ -36,7 +37,7 @@ def index(request: Request):
 ### Squirrelf AI Example ###
 @app.get("/example", response_class=HTMLResponse)
 def example(request: Request):
-    return templates.TemplateResponse("alt/example.html", {"request": request})
+    return templates.TemplateResponse("squirrelf_example.html", {"request": request})
 
 
 if __name__ == "__main__":

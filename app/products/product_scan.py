@@ -12,7 +12,7 @@ router_scan = APIRouter()
 
 @router_scan.get("/add_product", response_class=HTMLResponse)
 async def scan_product(request: Request):
-    return templates.TemplateResponse("scan.html", {"request": request})
+    return templates.TemplateResponse("product-scan.html", {"request": request})
 
 
 @router_scan.post("/scan", response_class=HTMLResponse)
@@ -27,12 +27,12 @@ async def scan(request: Request, file: UploadFile = File(...)):
             # Decode first barcode found
             code_string = barcodes[0].data.decode("utf-8")
             product = food_api.product.get(code_string)
-            return templates.TemplateResponse("scan.html", {"request": request, "code_string": code_string, "product": product})
+            return templates.TemplateResponse("product-scan.html", {"request": request, "code_string": code_string, "product": product})
 
-        return templates.TemplateResponse("scan.html", {"request": request, "error": "Barcode not detected or is blank/corrupted!"})
+        return templates.TemplateResponse("product-scan.html", {"request": request, "error": "Barcode not detected or is blank/corrupted!"})
 
     except Exception as e:
-        return templates.TemplateResponse("scan.html", {"request": request, "error": f"Error: {str(e)}"})
+        return templates.TemplateResponse("product-scan.html", {"request": request, "error": f"Error: {str(e)}"})
 
 
 @router_scan.post("/lookup")

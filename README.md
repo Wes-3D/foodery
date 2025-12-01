@@ -43,59 +43,58 @@
         │  └─ schemas.py
         │
         └─ assets/
-        ├─ certs/
-        │  ├─ cert.pem
-        │  └─ key.pem
-        │
-        ├─ static/
-        │  ├─ css/
-        │  └─ js/
-        │
-        └─ templates/
-        ├─ base.html
-        ├─ cookbook.html
-        ├─ inventory.html
-        ├─ recipe-add.html
-        └─ scan.html
+           ├─ certs/
+           │  ├─ cert.pem
+           │  └─ key.pem
+           │
+           ├─ static/
+           │  ├─ css/
+           │  └─ js/
+           │
+           └─ templates/
+              ├─ base.html
+              ├─ inventory.html
+              ├─ recipes.html
+              ├─ recipe-add.html
+              └─ scan.html
 
 
 ### Alt
 
-
         app/
         │
-        ├── main.py
-        ├── core/
+        ├─ main.py
+        ├─ core/
         │   └── log.py
         │
-        ├── api/
+        ├─ api/
         │   ├── __init__.py
         │   ├── router.py
         │   ├── ingredients.py
         │   └── recipes.py
         │
-        ├── db/
+        ├─ db/
         │   ├── __init__.py
         │   ├── base.py
         │   ├── session.py
         │   └── init_db.py
         │
-        ├── models/
+        ├─ models/
         │   ├── __init__.py
         │   ├── product.py
         │   ├── recipe.py
         │   └── recipe_step.py
         │
-        ├── schemas/
+        ├─ schemas/
         │   ├── __init__.py
         │   ├── product.py
         │   ├── recipe.py
         │   └── recipe_step.py
         │
-        └── crud/
-        ├── __init__.py
-        ├── product.py
-        └── recipe.py
+        └─ crud/
+           ├─ __init__.py
+           ├─ product.py
+           └─ recipe.py
 
 
 

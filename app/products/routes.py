@@ -32,4 +32,4 @@ def list_ingredients(db: Session = Depends(get_db)):
 def list_inventory(request: Request, db: Session = Depends(get_db)):
     #ingredients = db.query(models.Product).all()
     ingredients = [ingredient.to_dict() for ingredient in db.query(Product).all()]
-    return templates.TemplateResponse("inventory.html", {"request": request, "ingredients": ingredients})
+    return templates.TemplateResponse("products.html", {"request": request, "ingredients": ingredients})

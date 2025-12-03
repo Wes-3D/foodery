@@ -73,7 +73,7 @@ async function populateProductsTable(dataProducts) {
 
 async function fetchProducts() {
     try {
-        fetch("/ingredients")
+        fetch("/products")
             .then(res => res.json())
             .then(products => {
                 console.log("Products dataset:", products);

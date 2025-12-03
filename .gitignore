@@ -10,8 +10,11 @@ wheels/
 .venv
 
 *.log
-certs/
 assets/certs/
 assets/json/
 .old/
 /assets/templates/alt/
+
+.env
+config.py
+

@@ -32,15 +32,15 @@
         │  │  ├─ routes.py
         │  │  └─ scan.py
         │  │
-        │  └─ recipes/
-        │     ├─ routes.py
-        │     └─ scrape.py
-        │
-        ├─ data/
-        │  ├─ crud.py
-        │  ├─ db.py
-        │  ├─ models.py
-        │  └─ schemas.py
+        │  ├─ recipes/
+        │  │  ├─ routes.py
+        │  │  └─ scrape.py
+        │  │
+        │  └─ data/
+        │     ├─ crud.py
+        │     ├─ db.py
+        │     ├─ models.py
+        │     └─ schemas.py
         │
         └─ assets/
            ├─ certs/
@@ -50,13 +50,18 @@
            ├─ static/
            │  ├─ css/
            │  └─ js/
+           │     ├─ products.js
+           │     ├─ product-scan.js
+           │     ├─ recipes.js
+           │     └─ recipe-add.js
            │
            └─ templates/
               ├─ base.html
-              ├─ inventory.html
+              ├─ products.html
+              ├─ product-scan.html
               ├─ recipes.html
               ├─ recipe-add.html
-              └─ scan.html
+              └─ example.html
 
 
 ### Alt

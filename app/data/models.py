@@ -1,103 +1,138 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, Float, Date
-from sqlalchemy.orm import relationship
+#from sqlalchemy import Column, Integer, String, ForeignKey, Text, Float, Date
+#from sqlalchemy.orm import relationship
+from sqlmodel import SQLModel, Field, Relationship
+from pydantic import EmailStr
+from typing import List, Optional
+from datetime import date
+import uuid
 
-from app.data.db import Base
 
+##############################
+#####      Users      #####
+##############################
+# Shared properties
+class UserBase(SQLModel):
+    email: EmailStr = Field(unique=True, index=True, max_length=255)
+    is_active: bool = True
+    is_superuser: bool = False
+    full_name: str | None = Field(default=None, max_length=255)
 
-class User(Base):
+class UserCreate(UserBase):
+    password: str = Field(min_length=8, max_length=128)
+
+class User(UserBase, table=True):
     __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    recipes = relationship("Recipe", back_populates="owner")
-    mealplans = relationship("MealPlan", back_populates="user")
+
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    #username: str
+    hashed_password: str
+    #recipes: list["Recipe"] = Relationship(back_populates="owner", cascade_delete=True)
+    #mealplans: list["MealPlan"] = Relationship(back_populates="owner", cascade_delete=True)
 
 
-class Product(Base):
+
+##############################
+#####      Products      #####
+##############################
+class ProductBase(SQLModel):
+    code: int
+    name: str
+    #name: Optional[str] = None
+    volumeUnit: str = "unit"
+    volumeQty: float
+    weightGram: float | None = None
+    #weightGram: Optional[float] = None
+    brand: Optional[str] = None
+    category: Optional[str] = None
+
+
+class ProductCreate(ProductBase):
+    pass
+
+class ProductSchema(ProductBase):
+    id: int
+    class Config:
+        from_attributes = True
+
+
+class Product(ProductBase, table=True):
     __tablename__ = "products"
 
-    id = Column(Integer, primary_key=True, index=True)
-    code = Column(String, unique=True, index=True)
-    name = Column(String, nullable=True) #, unique=True, nullable=False
-    volumeUnit = Column(String, default="unit")  # g, ml, pcs, etc.
-    volumeQty = Column(Float, nullable=False)
-    weightGram = Column(Float, nullable=True)
-    brand = Column(String, nullable=True)
-    category = Column(String, nullable=True)
-
-    #recipes = relationship("RecipeIngredient", back_populates="ingredient")
-
-    """
-    def __init__(self, name):
-        self.name = name
-    """
-    def to_dict(self):
-        return {
-            'product_id': self.id,
-            'code': self.code,
-            'name': self.name,
-            'volumeUnit': self.volumeUnit,
-            'volumeQty': self.volumeQty,
-            'weightGram': self.weightGram if self.weightGram else ""
-        }
+    id: Optional[int] = Field(default=None, primary_key=True)
 
 
-class Recipe(Base):
-    __tablename__ = "recipes"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, nullable=False) #, index=True
-    description = Column(String)
-    servings = Column(Integer, default=1)
-    owner_id = Column(Integer, ForeignKey("users.id"))
 
-    #cook_method = Column(String, nullable=True)
-    time_prep = Column(Integer, default=5, nullable=True)
-    time_cook = Column(Integer, default=5, nullable=True)
-    #time_total = Column(Integer, default=10, nullable=True)
 
-    owner = relationship("User", back_populates="recipes")
-    ingredients = relationship("RecipeIngredient", back_populates="recipe", cascade="all, delete-orphan")
-    steps = relationship("RecipeStep", back_populates="recipe", cascade="all, delete-orphan")
+##############################
+#####      Recipes       #####
+##############################
 
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "description": self.description,
-            "servings": self.servings,
-            "time_prep": self.time_prep if self.time_prep else 5,
-            "time_cook": self.time_cook if self.time_cook else 5,
-            #"time_total": self.time_cook + self.time_prep,
-        }
 
-class RecipeIngredient(Base):
+class RecipeIngredientBase(SQLModel):
+    #ingredient_id: int
+    quantity: float
+    name: str
+    unit: Optional[str] = None
+    method: Optional[str] = None
+
+class RecipeStepBase(SQLModel):
+    step_number: int
+    description: str
+
+class RecipeBase(SQLModel):
+    name: str
+    description: Optional[str] = None
+    servings: int = 1
+    time_prep: int = 5
+    time_cook: int = 5
+
+
+
+class RecipeCreate(RecipeBase):
+    ingredients: List[RecipeIngredientBase]
+    steps: List[RecipeStepBase]
+    pass
+
+class RecipeSchema(RecipeBase):
+    id: int
+    class Config:
+        from_attributes = True
+
+
+
+class RecipeIngredient(RecipeIngredientBase, table=True):
     __tablename__ = "recipe_ingredients"
 
-    id = Column(Integer, primary_key=True, index=True)
-    recipe_id = Column(Integer, ForeignKey("recipes.id"))
-    #ingredient_id = Column(Integer, ForeignKey("products.id"))
-    quantity = Column(Float, nullable=False)
-    name = Column(String, nullable=False)
-    unit = Column(String, nullable=True)
-    method = Column(String, nullable=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
+    recipe_id: int = Field(foreign_key="recipes.id")
 
-    recipe = relationship("Recipe", back_populates="ingredients")
-    #ingredient = relationship("Product", back_populates="recipes")
+    recipe: "Recipe" = Relationship(back_populates="ingredients")
 
-class RecipeStep(Base):
+class RecipeStep(RecipeStepBase, table=True):
     __tablename__ = "recipe_steps"
 
-    id = Column(Integer, primary_key=True, index=True)
-    recipe_id = Column(Integer, ForeignKey("recipes.id"))
-    step_number = Column(Integer, nullable=False)
-    description = Column(Text, nullable=False)
-    ##time_perform = Column(Integer, default=1, nullable=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
+    recipe_id: int = Field(foreign_key="recipes.id")
 
-    recipe = relationship("Recipe", back_populates="steps")
+    recipe: "Recipe" = Relationship(back_populates="steps")
+
+class Recipe(RecipeBase, table=True):
+    __tablename__ = "recipes"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    #owner_id: int = Field(foreign_key="users.id")
+
+    ingredients: List["RecipeIngredient"] = Relationship(back_populates="recipe", cascade_delete=True)
+    steps: List["RecipeStep"] = Relationship(back_populates="recipe", cascade_delete=True)
+    #owner: "User" = Relationship(back_populates="recipes")
 
 
 
+##############################
+#####     Meal Plans     #####
+##############################
+"""
 class MealPlan(Base):
     __tablename__ = "mealplans"
 
@@ -107,4 +142,12 @@ class MealPlan(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
 
     recipe = relationship("Recipe")
-    user = relationship("User", back_populates="mealplans")
+    #user = relationship("User", back_populates="mealplans")
+"""
+
+"""
+class MealPlanBase(SQLModel):
+    date: str
+    description: Optional[str] = None
+    servings: int = 1
+"""

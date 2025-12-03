@@ -13,12 +13,16 @@ food_api = openfoodfacts.API(user_agent="MyAwesomeApp/1.0", country=openfoodfact
 
 #from data import schemas, models
 from app.data.db import get_db
-from app.data.models import Product
-from app.data.schemas import ProductSchema, ProductCreate
+from app.data.models import Product, ProductSchema, ProductCreate
 
-# Add Product
-@router_products.post("/ingredients/", response_model=ProductSchema)
-def create_ingredient(product: ProductCreate, db: Session = Depends(get_db)):
+# API Add Product
+"""
+curl -k -X POST "https://127.0.0.1:5000/products/" \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Grapes", "volumeUnit": "g", "volumeQty": 8, "code": "2545433"}'
+"""
+@router_products.post("/products/", response_model=ProductSchema)
+def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     db_product = Product(code=product.code, name=product.name, volumeUnit=product.volumeUnit, volumeQty=product.volumeQty)
     db.add(db_product)
     db.commit()
@@ -27,27 +31,37 @@ def create_ingredient(product: ProductCreate, db: Session = Depends(get_db)):
 
 
 # API View Products
-@router_products.get("/ingredients/", response_model=list[ProductSchema])
-def list_ingredients(db: Session = Depends(get_db)):
+@router_products.get("/products/", response_model=list[ProductSchema])
+def list_products(db: Session = Depends(get_db)):
     return db.query(Product).all()
 
 
 # HTML View All Products
 @router_products.get("/inventory", response_class=HTMLResponse)
 def list_inventory(request: Request, db: Session = Depends(get_db)):
-    #ingredients = db.query(models.Product).all()
-    ingredients = [ingredient.to_dict() for ingredient in db.query(Product).all()]
-    return templates.TemplateResponse("products.html", {"request": request, "ingredients": ingredients})
+    #ingredients = [ingredient.to_dict() for ingredient in db.query(Product).all()]
+    products = db.query(Product).all()
+    return templates.TemplateResponse("products.html", {"request": request, "products": products})
 
 
-## Scanner Add Product
-@router_products.get("/add_product", response_class=HTMLResponse)
+## Add Product
+@router_products.get("/product-add", response_class=HTMLResponse)
 async def scan_product(request: Request):
     return templates.TemplateResponse("product-scan.html", {"request": request})
 
 
-## Scan Routes
-@router_products.post("/scan", response_class=HTMLResponse)
+# Lookup from manual code
+@router_products.post("/product-lookup")
+async def lookup_code(data: dict):
+    code = data.get("code")
+    if not code:
+        return JSONResponse({"error": "No code provided"}, status_code=400)
+
+    product = food_api.product.get(code)
+    return {"code": code, "product": product}
+
+# Lookup from Scan Barcode
+@router_products.post("/product-scan", response_class=HTMLResponse)
 async def scan(request: Request, file: UploadFile = File(...)):
     product = None
     try:
@@ -65,13 +79,3 @@ async def scan(request: Request, file: UploadFile = File(...)):
 
     except Exception as e:
         return templates.TemplateResponse("product-scan.html", {"request": request, "error": f"Error: {str(e)}"})
-
-# Lookup from scan
-@router_products.post("/lookup")
-async def lookup_code(data: dict):
-    code = data.get("code")
-    if not code:
-        return JSONResponse({"error": "No code provided"}, status_code=400)
-
-    product = food_api.product.get(code)
-    return {"code": code, "product": product}

@@ -30,7 +30,7 @@ document.getElementById("barcodeForm").addEventListener("submit", async (event) 
     status.textContent = "Looking up product...";
 
     try {
-        const response = await fetch("/lookup", {
+        const response = await fetch("/product-lookup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ code })

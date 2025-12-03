@@ -1,3 +1,19 @@
+function addCell(row, text) {
+    const cell = row.insertCell();
+    cell.textContent = text;
+    cell.className = "px-4 py-2";
+    return cell;
+}
+function addLink(row, text, endpoint) {
+    const cell = row.insertCell();
+    cell.className = "px-4 py-2";
+    const link = document.createElement("a");
+    link.textContent = text;
+    link.href = endpoint;
+    link.className = "text-red-600 hover:underline";
+    cell.appendChild(link);
+    return cell;
+}
 
 async function populateRecipesTable(dataRecipes) {
     try {
@@ -34,6 +50,12 @@ async function populateRecipesTable(dataRecipes) {
                 const row = tbody.insertRow();
                 row.className = "border-t hover:bg-gray-50";
 
+                addCell(row, recipe.name);
+                addCell(row, recipe.id);
+                addCell(row, recipe.description);
+                addCell(row, recipe.servings);
+                //addLink(row, "Delete", `/recipe-delete/${recipe.id}`);
+                /*
                 // Insert cells directly
                 let cellName = row.insertCell();
                 cellName.textContent = recipe.name;
@@ -50,6 +72,7 @@ async function populateRecipesTable(dataRecipes) {
                 let cellServings = row.insertCell();
                 cellServings.textContent = recipe.servings;
                 cellServings.className = "px-4 py-2";
+                */
             }
         });
 

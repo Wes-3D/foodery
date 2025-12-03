@@ -12,8 +12,8 @@ router_products = APIRouter()
 food_api = openfoodfacts.API(user_agent="MyAwesomeApp/1.0", country=openfoodfacts.Country.us, timeout=10)
 
 #from data import schemas, models
-from app.data.db import get_db
-from app.data.models import Product, ProductSchema, ProductCreate
+from app.db.db import get_db
+from app.db.models import Product, ProductSchema, ProductCreate
 
 # API Add Product
 """

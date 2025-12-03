@@ -8,10 +8,9 @@ templates = Jinja2Templates(directory="assets/templates")
 router_recipes = APIRouter()
 
 
-from app.data.db import get_db
-from app.data import models
-from app.recipes import crud
-### Recipes ###
+from app.db.db import get_db
+from app.db.models import RecipeCreate, RecipeSchema, RecipeCreate
+from app.crud.recipes import create_recipe, create_recipe_form, get_recipe, get_recipes, delete_recipe
 
 # Post Recipe
 """
@@ -31,16 +30,16 @@ curl -k -X POST "https://127.0.0.1:5000/recipes/" \
   ]
 }'
 """
-@router_recipes.post("/recipes/", response_model=models.RecipeSchema)
-def create_recipe_route(recipe: models.RecipeCreate, db: Session = Depends(get_db)):
-    return crud.create_recipe(db=db, recipe=recipe)
+@router_recipes.post("/recipes/", response_model=RecipeSchema)
+def create_recipe_route(recipe: RecipeCreate, db: Session = Depends(get_db)):
+    return create_recipe(db=db, recipe=recipe)
 
 """
 curl -k -X POST "https://127.0.0.1:5000/recipe-delete/1"
 """
 @router_recipes.post("/recipe-delete/{recipe_id}", status_code=204)
 def delete_recipe_route(recipe_id: int, db: Session = Depends(get_db)):
-    return crud.delete_recipe(db=db, recipe_id=recipe_id)
+    return delete_recipe(db=db, recipe_id=recipe_id)
 
 # Add Recipe
 @router_recipes.get("/recipe-add", response_class=HTMLResponse)
@@ -64,7 +63,7 @@ def create_recipe_form_route(
     db: Session = Depends(get_db),
 ):
 
-    crud.create_recipe_form(
+    create_recipe_form(
         db=db,
         name=name,
         description=description,
@@ -81,15 +80,15 @@ def create_recipe_form_route(
     return RedirectResponse(url=f"/cookbook", status_code=303) #/{recipe.id}
 
 # API View All Recipes
-@router_recipes.get("/recipes/", response_model=list[models.RecipeSchema])
+@router_recipes.get("/recipes/", response_model=list[RecipeSchema])
 def read_recipes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    return crud.get_recipes(db, skip=skip, limit=limit)
+    return get_recipes(db, skip=skip, limit=limit)
 
 
 # API View Recipe
-@router_recipes.get("/recipes/{recipe_id}", response_model=models.RecipeSchema)
+@router_recipes.get("/recipes/{recipe_id}", response_model=RecipeSchema)
 def read_recipe(recipe_id: int, db: Session = Depends(get_db)):
-    db_recipe = crud.get_recipe(db, recipe_id)
+    db_recipe = get_recipe(db, recipe_id)
     if not db_recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")
     return db_recipe
@@ -97,5 +96,5 @@ def read_recipe(recipe_id: int, db: Session = Depends(get_db)):
 # HTML View All Recipes
 @router_recipes.get("/cookbook", response_class=HTMLResponse)
 def list_recipes(request: Request, db: Session = Depends(get_db)):
-    recipes = crud.get_recipes(db)
+    recipes = get_recipes(db)
     return templates.TemplateResponse("recipes.html", {"request": request, "recipes": recipes})

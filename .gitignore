@@ -15,6 +15,6 @@ assets/json/
 .old/
 /assets/templates/alt/
 
-.env
-config.py
+#.env
+#config.py
 

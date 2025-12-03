@@ -1,3 +1,19 @@
+function addCell(row, text) {
+    const cell = row.insertCell();
+    cell.textContent = text;
+    cell.className = "px-4 py-2";
+    return cell;
+}
+function addLink(row, text, endpoint) {
+    const cell = row.insertCell();
+    cell.className = "px-4 py-2";
+    const link = document.createElement("a");
+    link.textContent = text;
+    link.href = endpoint;
+    link.className = "text-red-600 hover:underline";
+    cell.appendChild(link);
+    return cell;
+}
 
 async function populateProductsTable(dataProducts) {
     try {
@@ -34,6 +50,14 @@ async function populateProductsTable(dataProducts) {
                 const row = tbody.insertRow();
                 row.className = "border-t hover:bg-gray-50";
 
+                addCell(row, product.id);
+                addCell(row, product.name);
+                addCell(row, product.code);
+                addCell(row, product.volumeUnit);
+                addCell(row, product.volumeQty);
+                addCell(row, product.weightGram);
+                //addLink(row, "Delete", `/product-delete/${product.id}`);
+                /*
                 // Insert cells directly
                 let cellId = row.insertCell();
                 cellId.textContent = product.id;
@@ -58,6 +82,12 @@ async function populateProductsTable(dataProducts) {
                 let cellWeight = row.insertCell();
                 cellWeight.textContent = product.weightGram;
                 cellWeight.className = "px-4 py-2";
+
+                let cellDelete = row.insertCell();
+                cellDelete.textContent = "Delete";
+                cellDelete.link = "/recipe-delete/";
+                cellDelete.className = "px-4 py-2";
+                */
             }
         });
 

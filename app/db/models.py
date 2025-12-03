@@ -1,5 +1,3 @@
-#from sqlalchemy import Column, Integer, String, ForeignKey, Text, Float, Date
-#from sqlalchemy.orm import relationship
 from sqlmodel import SQLModel, Field, Relationship
 from pydantic import EmailStr
 from typing import List, Optional

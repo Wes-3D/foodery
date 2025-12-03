@@ -1,18 +1,14 @@
 from fastapi import APIRouter, Request, Depends, Form, HTTPException
-from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
-
-
-templates = Jinja2Templates(directory="assets/templates")
-router_recipes = APIRouter()
-
 
 from app.db.db import get_db
 from app.db.models import RecipeCreate, RecipeSchema, RecipeCreate
 from app.crud.recipes import create_recipe, create_recipe_form, get_recipe, get_recipes, delete_recipe
 
-# Post Recipe
+router_recipes = APIRouter()
+
+# Post Recipe API
 """
 curl -k -X POST "https://127.0.0.1:5000/recipes/" \
      -H "Content-Type: application/json" \
@@ -44,7 +40,7 @@ def delete_recipe_route(recipe_id: int, db: Session = Depends(get_db)):
 # Add Recipe
 @router_recipes.get("/recipe-add", response_class=HTMLResponse)
 def recipe_form(request: Request):
-    return templates.TemplateResponse("recipe-add.html", {"request": request})
+    return request.app.state.templates.TemplateResponse("recipe-add.html", {"request": request})
 
 @router_recipes.post("/recipes/create")
 def create_recipe_form_route(
@@ -97,4 +93,4 @@ def read_recipe(recipe_id: int, db: Session = Depends(get_db)):
 @router_recipes.get("/cookbook", response_class=HTMLResponse)
 def list_recipes(request: Request, db: Session = Depends(get_db)):
     recipes = get_recipes(db)
-    return templates.TemplateResponse("recipes.html", {"request": request, "recipes": recipes})
+    return request.app.state.templates.TemplateResponse("recipes.html", {"request": request, "recipes": recipes})

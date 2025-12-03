@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Request, Depends, UploadFile, File
-from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse
 from sqlalchemy.orm import Session
 from pyzbar.pyzbar import decode
@@ -7,13 +6,12 @@ import cv2
 import numpy as np
 import openfoodfacts
 
-templates = Jinja2Templates(directory="assets/templates")
-router_products = APIRouter()
-food_api = openfoodfacts.API(user_agent="MyAwesomeApp/1.0", country=openfoodfacts.Country.us, timeout=10)
-
-#from data import schemas, models
 from app.db.db import get_db
 from app.db.models import Product, ProductSchema, ProductCreate
+
+
+food_api = openfoodfacts.API(user_agent="MyAwesomeApp/1.0", country=openfoodfacts.Country.us, timeout=10)
+router_products = APIRouter()
 
 # API Add Product
 """
@@ -41,13 +39,13 @@ def list_products(db: Session = Depends(get_db)):
 def list_inventory(request: Request, db: Session = Depends(get_db)):
     #ingredients = [ingredient.to_dict() for ingredient in db.query(Product).all()]
     products = db.query(Product).all()
-    return templates.TemplateResponse("products.html", {"request": request, "products": products})
+    return request.app.state.templates.TemplateResponse("products.html", {"request": request, "products": products})
 
 
 ## Add Product
 @router_products.get("/product-add", response_class=HTMLResponse)
 async def scan_product(request: Request):
-    return templates.TemplateResponse("product-scan.html", {"request": request})
+    return request.app.state.templates.TemplateResponse("product-scan.html", {"request": request})
 
 
 # Lookup from manual code
@@ -73,9 +71,9 @@ async def scan(request: Request, file: UploadFile = File(...)):
             # Decode first barcode found
             code_string = barcodes[0].data.decode("utf-8")
             product = food_api.product.get(code_string)
-            return templates.TemplateResponse("product-scan.html", {"request": request, "code_string": code_string, "product": product})
+            return request.app.state.templates.TemplateResponse("product-scan.html", {"request": request, "code_string": code_string, "product": product})
 
-        return templates.TemplateResponse("product-scan.html", {"request": request, "error": "Barcode not detected or is blank/corrupted!"})
+        return request.app.state.templates.TemplateResponse("product-scan.html", {"request": request, "error": "Barcode not detected or is blank/corrupted!"})
 
     except Exception as e:
-        return templates.TemplateResponse("product-scan.html", {"request": request, "error": f"Error: {str(e)}"})
+        return request.app.state.templates.TemplateResponse("product-scan.html", {"request": request, "error": f"Error: {str(e)}"})

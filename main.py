@@ -10,7 +10,7 @@ from app.core.log import setup_logging
 from app.routers.products import router_products
 from app.routers.recipes import router_recipes
 from app.db.db import init_database
-from config import settings
+from app.core.config import settings
 
 # Initialize logging early
 setup_logging()

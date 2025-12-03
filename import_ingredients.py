@@ -1,7 +1,7 @@
 import json
 from sqlalchemy.orm import Session
-from data.db import SessionLocal, engine
-from data import models
+from app.db.db import SessionLocal, engine
+from app.db import models
 
 def import_ingredients_from_json(json_path: str):
     db: Session = SessionLocal()

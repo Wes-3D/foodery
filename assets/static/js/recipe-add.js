@@ -4,7 +4,7 @@ function addIngredient() {
     div.innerHTML = `
         <label>Quantity:</label><input type="number" name="ing_qty" class="border p-1">
         <label>Ingredient:</label><input type="text" name="ing_name" class="border p-1">
-        <label>Unit:</label><input type="text" name="ing_unit" class="border p-1">
+        <label>Unit:</label><input type="text" name="ing_unit" step="any" class="border p-1">
         <label>Method:</label><input type="text" name="ing_method" class="border p-1">
     `;
     document.getElementById("ingredients").appendChild(div);

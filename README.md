@@ -28,19 +28,26 @@
         ~/
         ├─ main.py
         ├─ app/
-        │  ├─ products/
-        │  │  ├─ routes.py
-        │  │  └─ scan.py
+        │  ├─ core/
+        │  │  ├─ config.py
+        │  │  ├─ log.py
+        │  │  └─ security.py
         │  │
-        │  ├─ recipes/
-        │  │  ├─ routes.py
-        │  │  └─ scrape.py
+        │  ├─ db/
+        │  │  ├─ db.py
+        │  │  ├─ models.py
+        │  │  └─ seed.py
         │  │
-        │  └─ data/
-        │     ├─ crud.py
-        │     ├─ db.py
-        │     ├─ models.py
-        │     └─ schemas.py
+        │  ├─ crud/
+        │  │  ├─ products.py
+        │  │  ├─ recipes.py
+        │  │  ├─ recipe-scrape.py
+        │  │  └─ users.py
+        │  │
+        │  └─ routers/
+        │     ├─ main.py
+        │     ├─ products.py
+        │     └─ recipes.py
         │
         └─ assets/
            ├─ certs/

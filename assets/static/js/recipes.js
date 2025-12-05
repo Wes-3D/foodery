@@ -55,24 +55,6 @@ async function populateRecipesTable(dataRecipes) {
                 addCell(row, recipe.description);
                 addCell(row, recipe.servings);
                 //addLink(row, "Delete", `/recipe-delete/${recipe.id}`);
-                /*
-                // Insert cells directly
-                let cellName = row.insertCell();
-                cellName.textContent = recipe.name;
-                cellName.className = "px-4 py-2";
-
-                let cellId = row.insertCell();
-                cellId.textContent = recipe.id;
-                cellId.className = "px-4 py-2";
-
-                let cellDescription = row.insertCell();
-                cellDescription.textContent = recipe.description;
-                cellDescription.className = "px-4 py-2";
-
-                let cellServings = row.insertCell();
-                cellServings.textContent = recipe.servings;
-                cellServings.className = "px-4 py-2";
-                */
             }
         });
 

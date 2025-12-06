@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
 from app.db.db import get_db
-from app.db.models import RecipeCreate, RecipeSchema, RecipeCreate
+from app.db.models import RecipeCreate, RecipeSchema, RecipeCreate, RecipeIngredient, RecipeStep
 from app.crud.recipes import create_recipe, create_recipe_form, get_recipe, get_recipes, delete_recipe
 
 router_recipes = APIRouter()
@@ -94,3 +94,25 @@ def read_recipe(recipe_id: int, db: Session = Depends(get_db)):
 def list_recipes(request: Request, db: Session = Depends(get_db)):
     recipes = get_recipes(db)
     return request.app.state.templates.TemplateResponse("recipes.html", {"request": request, "recipes": recipes})
+
+
+@router_recipes.get("/cookbook/{recipe_id}", response_class=HTMLResponse)
+def view_recipe(recipe_id: int, request: Request, db: Session = Depends(get_db)):
+    recipe = get_recipe(db, recipe_id)
+    if not recipe:
+        raise HTTPException(status_code=404, detail="Recipe not found")
+    
+    ingredients = db.query(RecipeIngredient).filter(
+        RecipeIngredient.recipe_id == recipe_id
+    ).all()
+    
+    steps = db.query(RecipeStep).filter(
+        RecipeStep.recipe_id == recipe_id
+    ).order_by(RecipeStep.step_number).all()
+    
+    return request.app.state.templates.TemplateResponse("recipe-detail.html", {
+        "request": request,
+        "recipe": recipe,
+        "ingredients": ingredients,
+        "steps": steps
+    })

@@ -22,9 +22,9 @@ function addInputCell(div, title, inputName, type, value, style="border p-1", id
 function addIngredient() {
     const div = document.createElement("div");
 
-    addInputCell(div, title="Quantity:", inputName="ing_qty", type="number", value=null, style="border p-1", step=0.125); // step="any" // 0.125 // 0.1
+    addInputCell(div, title="Quantity:", inputName="ing_qty", type="number", value=null, style="border p-1", step="0.001"); // step="any" // "0.001" // "0.1"  // alternatively we make it a text type, and manage the input in js after, so that "1/4" is allowed
     addInputCell(div, title="Ingredient:", inputName="ing_name", type="text");
-    addInputCell(div, title="Unit:", inputName="ing_unit", type="text");
+    addInputCell(div, title="Unit:", inputName="ing_unit", type="text"); // we need a dropdown or autocomplete 
     addInputCell(div, title="Method:", inputName="ing_method", type="text");
 
     document.getElementById("ingredients").appendChild(div);

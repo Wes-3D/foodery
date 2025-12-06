@@ -55,6 +55,23 @@ async function populateRecipesTable(dataRecipes) {
                 addCell(row, recipe.description);
                 addCell(row, recipe.servings);
                 //addLink(row, "Delete", `/recipe-delete/${recipe.id}`);
+
+                // Actions
+                const actionCell = row.insertCell();
+                actionCell.className = "px-4 py-2";
+                
+                const viewLink = document.createElement("a");
+                viewLink.textContent = "View";
+                viewLink.href = `/cookbook/${recipe.id}`;
+                viewLink.className = "text-blue-600 hover:underline mr-4";
+                
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "Delete";
+                deleteBtn.className = "text-red-600 hover:underline";
+                deleteBtn.onclick = () => deleteRecipe(recipe.id);
+                
+                actionCell.appendChild(viewLink);
+                actionCell.appendChild(deleteBtn);
             }
         });
 
@@ -68,17 +85,33 @@ async function populateRecipesTable(dataRecipes) {
 
 
 
+// async function fetchRecipes() {
+//     try {
+//         fetch("/recipes")
+//             .then(res => res.json())
+//             .then(recipes => {
+//                 // build table here…
+//                 populateRecipesTable(recipes);
+//             });
+
+//     } catch (error) {
+//         console.error('Error fetching from /recipes:', error);
+//     }
+// }
+
 async function fetchRecipes() {
     try {
-        fetch("/recipes")
-            .then(res => res.json())
-            .then(recipes => {
-                // build table here…
-                populateRecipesTable(recipes);
-            });
-
+        const response = await fetch("/recipes/");
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const recipes = await response.json();
+        populateRecipesTable(recipes);
     } catch (error) {
         console.error('Error fetching from /recipes:', error);
+        document.getElementById("bodyContainer").innerHTML = '<p class="text-red-500 p-8">Error loading recipes</p>';
     }
 }
 

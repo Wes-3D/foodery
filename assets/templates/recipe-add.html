@@ -7,7 +7,14 @@
     
     <label>Name:</label><input type="text" name="name" required class="border p-2 w-full">
     <label>Description:</label><textarea name="description" class="border p-2 w-full"></textarea>
-    <label>Servings:</label><input type="number" name="servings" min="1" class="border p-2 w-full">
+    <label>Category:</label><input type="text" name="category" class="border p-2 w-full">
+    <label>Source:</label><input type="text" name="source" class="border p-2 w-full">
+    <label>Image URL:</label><input type="text" name="image" class="border p-2 w-full">
+
+    <label>Servings:</label><input type="number" name="servings" min="1" class="border p-2">
+    <label>Prep Time:</label><input type="number" name="time_prep" min="1" class="border p-2">
+    <label>Cook Time:</label><input type="number" name="time_cook" min="1" class="border p-2">
+    <label>Total Time:</label><input type="number" name="time_total" min="1" class="border p-2">
 
     <h2 class="text-xl font-semibold mt-4">Ingredients</h2><div id="ingredients"></div>
     <button type="button" onclick="addIngredient()">Add Ingredient</button>

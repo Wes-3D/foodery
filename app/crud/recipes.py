@@ -1,5 +1,7 @@
 from fastapi import HTTPException, Form
 from sqlalchemy.orm import Session
+from recipe_scrapers import scrape_me
+
 from app.db.models import Recipe, RecipeCreate, RecipeIngredient, RecipeStep, Product
 
 
@@ -33,9 +35,13 @@ def create_recipe(db: Session, recipe: RecipeCreate):
     db_recipe = Recipe(
         name=recipe.name,
         description=recipe.description,
+        image=recipe.image,
+        source=recipe.source,
+        category=recipe.category,
         servings=recipe.servings,
         time_prep=recipe.time_prep,
         time_cook=recipe.time_cook,
+        time_total=recipe.time_total,
     )
     db.add(db_recipe)
     db.commit()
@@ -61,7 +67,13 @@ def create_recipe_form(
     db: Session,
     name: str = Form(...),
     description: str = Form(""),
+    image: str = Form(...),
+    source: str = Form(...),
+    category: str = Form(...),
     servings: int = Form(...),
+    time_prep: int = Form(...),
+    time_cook: int = Form(...),
+    time_total: int = Form(...),
     #ingredient_id: list[int] = Form([]),
     ing_qty: list[float] = Form([]),
     ing_name: list[str] = Form([]),
@@ -71,7 +83,17 @@ def create_recipe_form(
     step_desc: list[str] = Form([]),
 ):
 
-    recipe = Recipe(name=name, description=description, servings=servings)
+    recipe = Recipe(
+        name=name, 
+        description=description,
+        image=image,
+        source=source,
+        category=category,
+        servings=servings,
+        time_prep=time_prep,
+        time_cook=time_cook,
+        time_total=time_total
+        )
     db.add(recipe)
     db.commit()
     db.refresh(recipe)
@@ -101,3 +123,22 @@ def get_or_create_ingredient(db: Session, name: str):
     db.commit()
     db.refresh(ingredient)
     return ingredient
+
+
+RECIPE1 = "https://www.food.com/recipe/my-copycat-shrimp-paesano-64300"
+RECIPE2 = "https://www.allrecipes.com/recipe/158968/spinach-and-feta-turkey-burgers/"
+
+def scrape_recipe_url(url=RECIPE2):
+    scraper = scrape_me(url) #help(scraper) ## for a complete list of methods:
+    
+    recipe_title = scraper.title()
+    recipe_instructions = scraper.instructions()
+    recipe_json = scraper.to_json()
+
+    print(recipe_json)
+    return recipe_json
+
+
+
+if __name__ == "__main__":
+    recipe_json = scrape_recipe_url()

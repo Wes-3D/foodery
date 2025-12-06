@@ -72,7 +72,13 @@ def create_recipe_form_route(
     request: Request,
     name: str = Form(...),
     description: str = Form(""),
+    image: str = Form(...),
+    source: str = Form(...),
+    category: str = Form(...),
     servings: int = Form(...),
+    time_prep: int = Form(...),
+    time_cook: int = Form(...),
+    time_total: int = Form(...),
     #ingredient_id: list[int] = Form([]),
     ing_qty: list[float] = Form([]),
     ing_name: list[str] = Form([]),
@@ -88,7 +94,13 @@ def create_recipe_form_route(
         db=db,
         name=name,
         description=description,
+        image=image,
+        source=source,
+        category=category,
         servings=servings,
+        time_prep=time_prep,
+        time_cook=time_cook,
+        time_total=time_total,
         ing_qty=ing_qty,
         ing_name=ing_name,
         ing_unit=ing_unit,
@@ -117,3 +129,23 @@ def view_recipe(recipe_id: int, request: Request, db: Session = Depends(get_db))
     steps = db.query(RecipeStep).filter(RecipeStep.recipe_id == recipe_id).order_by(RecipeStep.step_number).all()
 
     return request.app.state.templates.TemplateResponse("recipe-details.html", {"request": request, "recipe": recipe, "ingredients": ingredients, "steps": steps})
+
+
+# Add Recipe Form
+@router_recipes.get("/recipe-scrape", response_class=HTMLResponse)
+def recipe_scrape(request: Request):
+    return request.app.state.templates.TemplateResponse("alt/recipe-scrape.html", {"request": request})
+
+
+from fastapi import Query
+from recipe_scrapers import scrape_me
+
+@router_recipes.get("/scrape")
+def scrape_recipe(url: str = Query(..., description="URL of a recipe page")):
+    try:
+        scraper = scrape_me(url)
+        recipe_json = scraper.to_json()
+        return recipe_json
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

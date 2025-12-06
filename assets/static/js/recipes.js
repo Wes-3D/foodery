@@ -29,7 +29,7 @@ async function populateRecipesTable(dataRecipes) {
         const thead = document.createElement("thead");
         thead.className = "bg-gray-100 text-gray-700 uppercase text-xs text-left";
         const headRow = document.createElement("tr");
-        const headers = ["ID", "Recipe", "Description", "Servings"];
+        const headers = ["ID", "Recipe", "Description", "Servings", "View", "Delete"];
         headers.forEach(text => {
             const th = document.createElement("th");
             th.className = "px-4 py-2";

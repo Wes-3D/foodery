@@ -85,14 +85,14 @@ class RecipeStepBase(SQLModel):
 class RecipeBase(SQLModel):
     name: str
     description: Optional[str] = None
-    #source: Optional[str] = None
-    #image: Optional[str] = None
-    #category: Optional[str] = None
+    source: Optional[str] = None
+    category: Optional[str] = None
     #tags: Optional[str] = None
+    image: Optional[str] = None
     servings: int = 1
     time_prep: int = 5
     time_cook: int = 5
-    #time_total: int = 10
+    time_total: int = 10
 
 
 class RecipeCreate(RecipeBase):
@@ -159,4 +159,22 @@ class MealPlanBase(SQLModel):
     date: str
     description: Optional[str] = None
     servings: int = 1
+"""
+
+
+##############################
+#####     Inventory     #####
+##############################
+
+"""
+class Inventory(SQLModel, table=True):
+    __tablename__ = "inventory"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    product_id: int = Field(foreign_key="products.id")
+    quantity: float
+    unit: str  # e.g. "g", "ml", "unit", "tbsp"
+    
+    product: Product = Relationship()
+
 """

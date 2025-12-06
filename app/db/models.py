@@ -32,14 +32,15 @@ class User(UserBase, table=True):
 ##############################
 #####      Products      #####
 ##############################
+
+## Schemas
+
 class ProductBase(SQLModel):
-    code: int
-    name: str
-    #name: Optional[str] = None
+    code: Optional[int] = None # int
+    name: str # Optional[str] = None
     volumeUnit: str = "unit"
-    volumeQty: float
-    weightGram: float | None = None
-    #weightGram: Optional[float] = None
+    volumeQty: Optional[float] = None # float
+    weightGram: float | None = None # Optional[float] = None
     brand: Optional[str] = None
     category: Optional[str] = None
 
@@ -53,19 +54,20 @@ class ProductSchema(ProductBase):
         from_attributes = True
 
 
+## Model
+
 class Product(ProductBase, table=True):
     __tablename__ = "products"
 
     id: Optional[int] = Field(default=None, primary_key=True)
 
-
-
-
+    #recipes = relationship("RecipeIngredient", back_populates="ingredient")
 
 ##############################
 #####      Recipes       #####
 ##############################
 
+## Schemas
 
 class RecipeIngredientBase(SQLModel):
     #ingredient_id: int
@@ -73,6 +75,8 @@ class RecipeIngredientBase(SQLModel):
     name: str
     unit: Optional[str] = None
     method: Optional[str] = None
+    #note: Optional[str] = None
+    #display: str
 
 class RecipeStepBase(SQLModel):
     step_number: int
@@ -81,10 +85,14 @@ class RecipeStepBase(SQLModel):
 class RecipeBase(SQLModel):
     name: str
     description: Optional[str] = None
+    #source: Optional[str] = None
+    #image: Optional[str] = None
+    #category: Optional[str] = None
+    #tags: Optional[str] = None
     servings: int = 1
     time_prep: int = 5
     time_cook: int = 5
-
+    #time_total: int = 10
 
 
 class RecipeCreate(RecipeBase):
@@ -98,33 +106,36 @@ class RecipeSchema(RecipeBase):
         from_attributes = True
 
 
+## Models
 
 class RecipeIngredient(RecipeIngredientBase, table=True):
     __tablename__ = "recipe_ingredients"
-
+    # Fields
     id: Optional[int] = Field(default=None, primary_key=True)
     recipe_id: int = Field(foreign_key="recipes.id")
-
+    product_id: Optional[int] = Field(default=None, foreign_key="products.id")
+    # Relationships
     recipe: "Recipe" = Relationship(back_populates="ingredients")
+    product: Product = Relationship()
 
 class RecipeStep(RecipeStepBase, table=True):
     __tablename__ = "recipe_steps"
-
+    # Fields
     id: Optional[int] = Field(default=None, primary_key=True)
     recipe_id: int = Field(foreign_key="recipes.id")
-
+    # Relationships
     recipe: "Recipe" = Relationship(back_populates="steps")
+
 
 class Recipe(RecipeBase, table=True):
     __tablename__ = "recipes"
-
+    # Fields
     id: Optional[int] = Field(default=None, primary_key=True)
     #owner_id: int = Field(foreign_key="users.id")
-
+    # Relationships
     ingredients: List["RecipeIngredient"] = Relationship(back_populates="recipe", cascade_delete=True)
     steps: List["RecipeStep"] = Relationship(back_populates="recipe", cascade_delete=True)
     #owner: "User" = Relationship(back_populates="recipes")
-
 
 
 ##############################

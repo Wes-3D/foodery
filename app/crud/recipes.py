@@ -1,6 +1,6 @@
 from fastapi import HTTPException, Form
 from sqlalchemy.orm import Session
-from app.db.models import Recipe, RecipeCreate, RecipeIngredient, RecipeStep
+from app.db.models import Recipe, RecipeCreate, RecipeIngredient, RecipeStep, Product
 
 
 def get_recipe(db: Session, recipe_id: int):
@@ -43,7 +43,8 @@ def create_recipe(db: Session, recipe: RecipeCreate):
 
     # Add ingredients
     for item in recipe.ingredients:
-        db_ri = RecipeIngredient(recipe_id=db_recipe.id, quantity=item.quantity, name=item.name, unit=item.unit, method=item.method) #ingredient_id=item.ingredient_id,
+        product_ingredient = get_or_create_ingredient(db, item.name)
+        db_ri = RecipeIngredient(recipe_id=db_recipe.id, product_id=product_ingredient.id, quantity=item.quantity, name=item.name, unit=item.unit, method=item.method)
         db.add(db_ri)
 
     # Add steps
@@ -77,7 +78,8 @@ def create_recipe_form(
 
     # Add ingredients
     for qty, name, unit, method in zip(ing_qty, ing_name, ing_unit, ing_method):
-        ri = RecipeIngredient(recipe_id=recipe.id, quantity=qty, name=name, unit=unit, method=method) #ing_id=ing_id,
+        product_ingredient = get_or_create_ingredient(db, name)
+        ri = RecipeIngredient(recipe_id=recipe.id, product_id=product_ingredient.id, quantity=qty, name=name, unit=unit, method=method) #ing_id=ing_id,
         db.add(ri)
 
     # Add steps
@@ -87,3 +89,15 @@ def create_recipe_form(
 
     db.commit()
 
+
+def get_or_create_ingredient(db: Session, name: str):
+    ingredient = (db.query(Product).filter(Product.name.ilike(name)).first())
+
+    if ingredient:
+        return ingredient
+
+    ingredient = Product(name=name)
+    db.add(ingredient)
+    db.commit()
+    db.refresh(ingredient)
+    return ingredient

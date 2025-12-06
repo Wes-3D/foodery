@@ -13,12 +13,19 @@ from app.db.models import Product, ProductSchema, ProductCreate
 food_api = openfoodfacts.API(user_agent="MyAwesomeApp/1.0", country=openfoodfacts.Country.us, timeout=10)
 router_products = APIRouter()
 
-# API Add Product
+
+
+##############################
+#####     API Routes     #####
+##############################
+
+
 """
 curl -k -X POST "https://127.0.0.1:5000/products/" \
      -H "Content-Type: application/json" \
      -d '{"name": "Grapes", "volumeUnit": "g", "volumeQty": 8, "code": "2545433"}'
 """
+# API Add Product
 @router_products.post("/products/", response_model=ProductSchema)
 def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     db_product = Product(code=product.code, name=product.name, volumeUnit=product.volumeUnit, volumeQty=product.volumeQty)
@@ -27,12 +34,17 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     db.refresh(db_product)
     return db_product
 
-
 # API View Products
 @router_products.get("/products/", response_model=list[ProductSchema])
 def list_products(db: Session = Depends(get_db)):
     return db.query(Product).all()
 
+
+
+
+##############################
+#####     HTML Views     #####
+##############################
 
 # HTML View All Products
 @router_products.get("/inventory", response_class=HTMLResponse)
@@ -41,12 +53,17 @@ def list_inventory(request: Request, db: Session = Depends(get_db)):
     products = db.query(Product).all()
     return request.app.state.templates.TemplateResponse("products.html", {"request": request, "products": products})
 
-
-## Add Product
+# Add Product
 @router_products.get("/product-add", response_class=HTMLResponse)
 async def scan_product(request: Request):
     return request.app.state.templates.TemplateResponse("product-scan.html", {"request": request})
 
+
+
+
+##############################
+#####     Scan Utils     #####
+##############################
 
 # Lookup from manual code
 @router_products.post("/product-lookup")
@@ -57,6 +74,7 @@ async def lookup_code(data: dict):
 
     product = food_api.product.get(code)
     return {"code": code, "product": product}
+
 
 # Lookup from Scan Barcode
 @router_products.post("/product-scan", response_class=HTMLResponse)

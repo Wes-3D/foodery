@@ -11,3 +11,14 @@
 
 **Meal Plan**
 - need category/keyword/diet tags to create
+
+
+## Cleanup
+
+- RecipeCreate: 
+    - separate functions for accepting HTML form and JSON
+    - can they be combined into 1 route or need to stay separate?
+
+- add attributes to Recipe
+- templates, settings in app 'request' state
+- deleteRecipe function & refresh to page

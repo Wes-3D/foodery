@@ -3,7 +3,7 @@
 {% block content %}
 <h1 class="text-2xl font-bold mb-4">Add Recipe</h1>
 
-<form method="POST" action="/recipes/create">
+<form method="POST" id="recipeForm" action="/recipes/create/">
     
     <label>Name:</label><input type="text" name="name" required class="border p-2 w-full">
     <label>Description:</label><textarea name="description" class="border p-2 w-full"></textarea>

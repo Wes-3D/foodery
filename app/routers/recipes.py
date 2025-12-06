@@ -8,7 +8,23 @@ from app.crud.recipes import create_recipe, create_recipe_form, get_recipe, get_
 
 router_recipes = APIRouter()
 
-# Post Recipe API
+##############################
+#####     API Routes     #####
+##############################
+
+# API View All Recipes
+@router_recipes.get("/recipes/", response_model=list[RecipeSchema])
+def read_recipes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    return get_recipes(db, skip=skip, limit=limit)
+
+# API View Recipe
+@router_recipes.get("/recipes/{recipe_id}", response_model=RecipeSchema)
+def read_recipe(recipe_id: int, db: Session = Depends(get_db)):
+    db_recipe = get_recipe(db, recipe_id)
+    if not db_recipe:
+        raise HTTPException(status_code=404, detail="Recipe not found")
+    return db_recipe
+
 """
 curl -k -X POST "https://127.0.0.1:5000/recipes/" \
      -H "Content-Type: application/json" \
@@ -26,6 +42,7 @@ curl -k -X POST "https://127.0.0.1:5000/recipes/" \
   ]
 }'
 """
+# API Post Recipe 
 @router_recipes.post("/recipes/", response_model=RecipeSchema)
 def create_recipe_route(recipe: RecipeCreate, db: Session = Depends(get_db)):
     return create_recipe(db=db, recipe=recipe)
@@ -33,15 +50,23 @@ def create_recipe_route(recipe: RecipeCreate, db: Session = Depends(get_db)):
 """
 curl -k -X POST "https://127.0.0.1:5000/recipe-delete/1"
 """
+# API Delete Recipe 
 @router_recipes.post("/recipe-delete/{recipe_id}", status_code=204)
 def delete_recipe_route(recipe_id: int, db: Session = Depends(get_db)):
     return delete_recipe(db=db, recipe_id=recipe_id)
 
-# Add Recipe
+
+
+##############################
+#####     HTML Views     #####
+##############################
+
+# Add Recipe Form
 @router_recipes.get("/recipe-add", response_class=HTMLResponse)
 def recipe_form(request: Request):
     return request.app.state.templates.TemplateResponse("recipe-add.html", {"request": request})
 
+# Save Recipe Form
 @router_recipes.post("/recipes/create")
 def create_recipe_form_route(
     request: Request,
@@ -64,7 +89,6 @@ def create_recipe_form_route(
         name=name,
         description=description,
         servings=servings,
-        #ingredient_id: list[int] = Form([]),
         ing_qty=ing_qty,
         ing_name=ing_name,
         ing_unit=ing_unit,
@@ -75,19 +99,6 @@ def create_recipe_form_route(
 
     return RedirectResponse(url=f"/cookbook", status_code=303) #/{recipe.id}
 
-# API View All Recipes
-@router_recipes.get("/recipes/", response_model=list[RecipeSchema])
-def read_recipes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    return get_recipes(db, skip=skip, limit=limit)
-
-
-# API View Recipe
-@router_recipes.get("/recipes/{recipe_id}", response_model=RecipeSchema)
-def read_recipe(recipe_id: int, db: Session = Depends(get_db)):
-    db_recipe = get_recipe(db, recipe_id)
-    if not db_recipe:
-        raise HTTPException(status_code=404, detail="Recipe not found")
-    return db_recipe
 
 # HTML View All Recipes
 @router_recipes.get("/cookbook", response_class=HTMLResponse)
@@ -95,24 +106,14 @@ def list_recipes(request: Request, db: Session = Depends(get_db)):
     recipes = get_recipes(db)
     return request.app.state.templates.TemplateResponse("recipes.html", {"request": request, "recipes": recipes})
 
-
+# HTML View Recipe Details
 @router_recipes.get("/cookbook/{recipe_id}", response_class=HTMLResponse)
 def view_recipe(recipe_id: int, request: Request, db: Session = Depends(get_db)):
     recipe = get_recipe(db, recipe_id)
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")
     
-    ingredients = db.query(RecipeIngredient).filter(
-        RecipeIngredient.recipe_id == recipe_id
-    ).all()
-    
-    steps = db.query(RecipeStep).filter(
-        RecipeStep.recipe_id == recipe_id
-    ).order_by(RecipeStep.step_number).all()
-    
-    return request.app.state.templates.TemplateResponse("recipe-detail.html", {
-        "request": request,
-        "recipe": recipe,
-        "ingredients": ingredients,
-        "steps": steps
-    })
+    ingredients = db.query(RecipeIngredient).filter(RecipeIngredient.recipe_id == recipe_id).all()
+    steps = db.query(RecipeStep).filter(RecipeStep.recipe_id == recipe_id).order_by(RecipeStep.step_number).all()
+
+    return request.app.state.templates.TemplateResponse("recipe-details.html", {"request": request, "recipe": recipe, "ingredients": ingredients, "steps": steps})

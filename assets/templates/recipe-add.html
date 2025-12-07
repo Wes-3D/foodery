@@ -11,10 +11,10 @@
     <label>Source:</label><input type="text" name="source" class="border p-2 w-full">
     <label>Image URL:</label><input type="text" name="image" class="border p-2 w-full">
 
-    <label>Servings:</label><input type="number" name="servings" min="1" class="border p-2">
-    <label>Prep Time:</label><input type="number" name="time_prep" min="1" class="border p-2">
-    <label>Cook Time:</label><input type="number" name="time_cook" min="1" class="border p-2">
-    <label>Total Time:</label><input type="number" name="time_total" min="1" class="border p-2">
+    <label>Servings:</label><input type="number" name="servings" min="1" class="border p-2 m-2">
+    <label>Prep Time:</label><input type="number" name="time_prep" min="1" class="border p-2 m-2">
+    <label>Cook Time:</label><input type="number" name="time_cook" min="1" class="border p-2 m-2">
+    <label>Total Time:</label><input type="number" name="time_total" min="1" class="border p-2 m-2">
 
     <h2 class="text-xl font-semibold mt-4">Ingredients</h2><div id="ingredients"></div>
     <button type="button" onclick="addIngredient()">Add Ingredient</button>
@@ -31,6 +31,8 @@
     // Convert the Jinja variable into JSON for JavaScript
     const displayUnits = {{ display_units | tojson }};
     console.log("display_units dataset:", displayUnits);
+    const productList = {{ products | tojson }};
+    console.log("productList dataset:", productList);
 
 </script>
 <script src="{{ url_for('static', path='js/recipe-add.js') }}"></script>

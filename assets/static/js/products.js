@@ -59,30 +59,6 @@ async function populateProductsTable(dataProducts) {
                 //addLink(row, "Delete", `/product-delete/${product.id}`);
                 /*
                 // Insert cells directly
-                let cellId = row.insertCell();
-                cellId.textContent = product.id;
-                cellId.className = "px-4 py-2";
-
-                let cellName = row.insertCell();
-                cellName.textContent = product.name;
-                cellName.className = "px-4 py-2";
-
-                let cellCode = row.insertCell();
-                cellCode.textContent = product.code;
-                cellCode.className = "px-4 py-2";
-
-                let cellUnit = row.insertCell();
-                cellUnit.textContent = product.volumeUnit;
-                cellUnit.className = "px-4 py-2";
-
-                let cellVolume = row.insertCell();
-                cellVolume.textContent = product.volumeQty;
-                cellVolume.className = "px-4 py-2";
-
-                let cellWeight = row.insertCell();
-                cellWeight.textContent = product.weightGram;
-                cellWeight.className = "px-4 py-2";
-
                 let cellDelete = row.insertCell();
                 cellDelete.textContent = "Delete";
                 cellDelete.link = "/recipe-delete/";
@@ -90,7 +66,6 @@ async function populateProductsTable(dataProducts) {
                 */
             }
         });
-
         // Add the table to the page
         table.appendChild(tbody);
         container.appendChild(table);
@@ -98,8 +73,6 @@ async function populateProductsTable(dataProducts) {
         console.error('Error rendering table:', error);
     }
 }
-
-
 
 async function fetchProducts() {
     try {
@@ -115,8 +88,6 @@ async function fetchProducts() {
         console.error('Error fetching from /products:', error);
     }
 }
-
-
 
 document.addEventListener('DOMContentLoaded', async function() {
     //await populateProductsTable();

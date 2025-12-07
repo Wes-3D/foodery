@@ -1,8 +1,9 @@
 from sqlmodel import Session, select
 
-from app.db.models import User, UserCreate, MeasureUnit
+from app.db.models import User, UserCreate, MeasureUnit, Product
 from app.crud.user import create_user
-from app.db.mealie_units import measure_units
+from assets.data.units.mealie_units import measure_units
+from assets.data.products.tandoor_foods import tandoor_json
 
 def seed_admin(db: Session, settings) -> None:
     # Tables should be created with Alembic migrations
@@ -48,3 +49,41 @@ def seed_measure_units(db: Session):
         upsert_measurement_unit(db, key, unit_data)
 
     return
+
+
+def seed_products_tandoor(db: Session):
+    foods = tandoor_json.get("data")
+    count = 0
+    for food_id, food in foods.items():
+        props = food["properties"]
+        name = food_id.removeprefix("food-").replace("-"," ")
+        category = food.get("store_category", "").removeprefix("category-").replace("-"," ")
+        fdc_id = food.get("fdc_id", "")
+        # Get the first foodPortion for unit and gram weight
+        #volumeUnit = "unit"
+        volumeUnit = props.get("food_unit", "")
+        #volumeQty = food.get("food_amount", 1)
+        gram_weight = props.get("food_amount", 1)
+
+        # Skip duplicates
+        if db.query(Product).filter_by(name=name).first():
+            continue
+
+        ingredient = Product(
+            code=fdc_id,
+            name=name,
+            volumeUnit=volumeUnit,
+            volumeQty=1,
+            weightGram=gram_weight,
+            category=category
+        )
+        db.add(ingredient)
+        count += 1
+
+    db.commit()
+    db.close()
+    print(f"Imported {count} ingredients.")
+    #print(f"Foods: {foods}")
+
+    """
+    """

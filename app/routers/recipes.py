@@ -6,6 +6,7 @@ from app.db.db import get_db
 from app.db.models import RecipeCreate, RecipeSchema, RecipeCreate, RecipeIngredient, RecipeStep
 from app.crud.recipes import create_recipe, create_recipe_form, get_recipe, get_recipes, delete_recipe
 from app.crud.units import get_display_units
+from app.crud.products import get_product_list
 
 router_recipes = APIRouter()
 
@@ -66,7 +67,8 @@ def delete_recipe_route(recipe_id: int, db: Session = Depends(get_db)):
 @router_recipes.get("/recipe-add", response_class=HTMLResponse)
 def recipe_form(request: Request, db: Session = Depends(get_db)):
     display_units = get_display_units(db)
-    return request.app.state.templates.TemplateResponse("recipe-add.html", {"request": request, "display_units": display_units})
+    products = get_product_list(db)
+    return request.app.state.templates.TemplateResponse("recipe-add.html", {"request": request, "display_units": display_units, "products": products})
 
 # Save Recipe Form
 @router_recipes.post("/recipes/create")

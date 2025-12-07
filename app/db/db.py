@@ -2,7 +2,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel, create_engine, Session
 from fastapi import FastAPI, Request
 
-from app.db.seed import seed_admin, seed_measure_units
+from app.db.seed import seed_admin, seed_measure_units, seed_products_tandoor
 
 
 def init_database(app: FastAPI):
@@ -25,6 +25,7 @@ def init_database(app: FastAPI):
         #seed_products(db)
         #seed_recipes(db)
         seed_measure_units(db)
+        seed_products_tandoor(db)
 
 
 def get_db(request: Request):

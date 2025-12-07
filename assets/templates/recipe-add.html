@@ -27,6 +27,12 @@
     </button>
 </form>
 
+<script>
+    // Convert the Jinja variable into JSON for JavaScript
+    const displayUnits = {{ display_units | tojson }};
+    console.log("display_units dataset:", displayUnits);
+
+</script>
 <script src="{{ url_for('static', path='js/recipe-add.js') }}"></script>
 
 {% endblock %}

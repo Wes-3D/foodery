@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.db.db import get_db
 from app.db.models import RecipeCreate, RecipeSchema, RecipeCreate, RecipeIngredient, RecipeStep
 from app.crud.recipes import create_recipe, create_recipe_form, get_recipe, get_recipes, delete_recipe
+from app.crud.units import get_display_units
 
 router_recipes = APIRouter()
 
@@ -63,8 +64,9 @@ def delete_recipe_route(recipe_id: int, db: Session = Depends(get_db)):
 
 # Add Recipe Form
 @router_recipes.get("/recipe-add", response_class=HTMLResponse)
-def recipe_form(request: Request):
-    return request.app.state.templates.TemplateResponse("recipe-add.html", {"request": request})
+def recipe_form(request: Request, db: Session = Depends(get_db)):
+    display_units = get_display_units(db)
+    return request.app.state.templates.TemplateResponse("recipe-add.html", {"request": request, "display_units": display_units})
 
 # Save Recipe Form
 @router_recipes.post("/recipes/create")

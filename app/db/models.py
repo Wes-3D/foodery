@@ -4,7 +4,6 @@ from typing import List, Optional
 from datetime import date
 import uuid
 
-
 ##############################
 #####      Users      #####
 ##############################
@@ -178,3 +177,25 @@ class Inventory(SQLModel, table=True):
     product: Product = Relationship()
 
 """
+
+
+#################################
+#####     Measure Units     #####
+#################################
+
+
+class MeasureUnit(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    key: str = Field(index=True)  # e.g. "teaspoon", "pint"
+    name: str                     # "teaspoon"
+    plural_name: str              # "teaspoons"
+    abbreviation: str             # "tsp"
+    description: str = ""         # Optional field
+
+
+class MeasureUnitCreate(SQLModel):
+    key: str
+    name: str
+    plural_name: str
+    abbreviation: str
+    description: str = ""

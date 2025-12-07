@@ -17,4 +17,4 @@ assets/json/
 
 #.env
 #config.py
-
+scraper.py

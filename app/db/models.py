@@ -74,7 +74,7 @@ class RecipeIngredientBase(SQLModel):
     name: str
     unit: Optional[str] = None
     method: Optional[str] = None
-    #note: Optional[str] = None
+    note: Optional[str] = None
     #display: str
 
 class RecipeStepBase(SQLModel):

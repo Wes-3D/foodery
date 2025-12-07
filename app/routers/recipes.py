@@ -133,7 +133,7 @@ def view_recipe(recipe_id: int, request: Request, db: Session = Depends(get_db))
     return request.app.state.templates.TemplateResponse("recipe-details.html", {"request": request, "recipe": recipe, "ingredients": ingredients, "steps": steps})
 
 
-# Add Recipe Form
+# Scrape Recipe Form
 @router_recipes.get("/recipe-scrape", response_class=HTMLResponse)
 def recipe_scrape(request: Request):
     return request.app.state.templates.TemplateResponse("alt/recipe-scrape.html", {"request": request})

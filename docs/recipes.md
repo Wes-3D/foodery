@@ -1,34 +1,41 @@
-Recipe
 
+## Model
+**Recipe**
 - id
-- name
-- description
-- servings
-- time_prep
-- time_cook
-- time_total
-- image
-- source
-- category
-- tags
-
-- #cook_method
-- #time_perform
-
-
-- recipe_ingredients
-
+- name: str
+- description: Optional[str] = None
+- source: Optional[str] = None
+- category: Optional[str] = None
+- image: Optional[str] = None
+- servings: int = 1
+- time_prep: int = 5
+- time_cook: int = 5
+- time_total: int = 10
+- Not Implemented:
+    - #time_perform
+    - #cook_method
+    - #tags: Optional[str] = None
+    - owner_id
+- **RecipeIngredient** (recipe_ingredients)
     - id
-    - recipe_id
-    - ingredient_id
-    - quantity
+    - quantity: float
+    - name: str
+    - unit: Optional[str] = None
+    - method: Optional[str] = None
+    - #note: Optional[str] = None
+    - #display: str
+    - References:
+        - recipe_id
+        - product_id
+    - Relationships:
+        - recipe: "Recipe" = Relationship(back_populates="ingredients")
+        - product: Product = Relationship()
 
-- recipe_steps
-
+- **RecipeSteps** (recipe_steps)
     - id
-    - recipe_id
-    - step_number
-    - description
-
-
-- owner_id
+    - step_number: int
+    - description: str
+    - References:
+        - recipe_id
+    - Relationships:
+        - recipe: "Recipe

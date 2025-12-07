@@ -4,13 +4,34 @@
 - nutrient information
 - populate from barcode scanner
 
+
 **[Recipes](recipes.md)**
+- add recipe from manual form
 - scrape from url (parse ingredient list & amounts) - [scraper](scraper.md)
 - show available recipes from current pantry
 - scale recipe to pantry or serving needs
 
+
 **Meal Plan**
 - need category/keyword/diet tags to create
+
+
+## Functions
+- crud/recipes.py
+    - get_recipe
+    - get_recipes
+    - delete_recipe
+    - create_recipe
+    - create_recipe_form
+    - get_or_create_ingredient
+    - scrape_recipe_url
+
+- crud/products.py
+
+- crud/user.py
+
+- crud/units.py
+    - get_display_units
 
 
 ## Cleanup
@@ -22,3 +43,4 @@
 - add attributes to Recipe
 - templates, settings in app 'request' state
 - deleteRecipe function & refresh to page
+

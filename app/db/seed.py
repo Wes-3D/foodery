@@ -20,34 +20,26 @@ def seed_admin(db: Session, settings) -> None:
         user = create_user(session=db, user_create=user_in)
 
 
+def seed_measure_units(db: Session):
+    count = 0
+    for key, unit_data in measure_units.items():
+        # Skip duplicates
+        if db.query(MeasureUnit).filter_by(key=key).first():
+            continue
 
-
-
-def upsert_measurement_unit(db: Session, key: str, unit_data: dict):
-    db_unit = db.query(MeasureUnit).filter(MeasureUnit.key == key).first()
-
-    if db_unit:
-        # update existing
-        for k, v in unit_data.items():
-            setattr(db_unit, k, v)
-    else:
-        db_unit = MeasureUnit(key=key, **unit_data)
+        db_unit = MeasureUnit(
+            key=key,
+            name=unit_data.get("name", ""),
+            plural_name=unit_data.get("plural_name", ""),
+            abbreviation=unit_data.get("abbreviation", "")
+        )
+        
         db.add(db_unit)
+        count += 1
 
     db.commit()
-    db.refresh(db_unit)
-    return db_unit
-
-
-def seed_measure_units(db: Session):
-    db_unit = db.query(MeasureUnit).all()
-
-    if db_unit:
-        return
-
-    for key, unit_data in measure_units.items():
-        upsert_measurement_unit(db, key, unit_data)
-
+    db.close()
+    print(f"Imported {count} measureUnits.")
     return
 
 

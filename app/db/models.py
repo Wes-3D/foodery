@@ -190,7 +190,7 @@ class MeasureUnit(SQLModel, table=True):
     name: str                     # "teaspoon"
     plural_name: str              # "teaspoons"
     abbreviation: str             # "tsp"
-    description: str = ""         # Optional field
+    #description: str = ""         # Optional field
 
 
 class MeasureUnitCreate(SQLModel):
@@ -198,4 +198,4 @@ class MeasureUnitCreate(SQLModel):
     name: str
     plural_name: str
     abbreviation: str
-    description: str = ""
+    #description: str = ""

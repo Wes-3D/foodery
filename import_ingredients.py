@@ -1,7 +1,7 @@
 import json
 from sqlalchemy.orm import Session
-from app.db.db import SessionLocal, engine
-from app.db import models
+#from app.db.db import SessionLocal, engine
+#from app.db import models
 
 def import_ingredients_from_json(json_path: str):
     db: Session = SessionLocal()
@@ -97,9 +97,33 @@ def import_foods_tandoor(json_path: str):
     print(f"Imported {count} ingredients.")
 
 
+
+
+def seed_measure_units():
+    from assets.data.units.mealie_units import measure_units
+    for key, unit_data in measure_units.items():
+
+        key = key
+        name = unit_data.get("name", "")
+        plural_name = unit_data.get("plural_name", "")
+        abbreviation = unit_data.get("abbreviation", "")
+        
+        print(f"Key: {key}")
+        print(f"name: {name}")
+        print(f"plural_name: {plural_name}")
+        print(f"abbreviation: {abbreviation}")
+
+
+    return
+
+
+
 if __name__ == "__main__":
+    seed_measure_units()
+    """
     import sys
     if len(sys.argv) < 2:
         print("Usage: python import_ingredients.py <path_to_json>")
         sys.exit(1)
     import_ingredients_from_json(sys.argv[1])
+    """

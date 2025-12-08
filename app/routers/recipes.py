@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Request, Depends, Form, HTTPException
+from fastapi import APIRouter, Request, Depends, Form, HTTPException, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
+from recipe_scrapers import scrape_me
 
 from app.db.db import get_db
 from app.db.models import RecipeCreate, RecipeSchema, RecipeCreate, RecipeIngredient, RecipeStep
@@ -140,16 +141,12 @@ def view_recipe(recipe_id: int, request: Request, db: Session = Depends(get_db))
 def recipe_scrape(request: Request):
     return request.app.state.templates.TemplateResponse("alt/recipe-scrape.html", {"request": request})
 
-
-from fastapi import Query
-from recipe_scrapers import scrape_me
-
+## Scraper API
 @router_recipes.get("/scrape")
 def scrape_recipe(url: str = Query(..., description="URL of a recipe page")):
     try:
         scraper = scrape_me(url)
         recipe_json = scraper.to_json()
         return recipe_json
-
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

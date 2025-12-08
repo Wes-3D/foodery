@@ -24,7 +24,7 @@ function saveRecipeForm() {
             const ingredientName = item.querySelector("input[name='ing_name']").value.trim();
             const ingredientValue = item.querySelector("input[name='ing_qty']").value.trim();
             const ingredientQty = normalizeFraction(ingredientValue)
-            console.log("ingredientQty:", ingredientQty);
+            //console.log("ingredientQty:", ingredientQty);
             // Check if the name field is empty. If it is, skip this item.
             if (ingredientName === '' || !ingredientQty) {
                 return;
@@ -100,7 +100,6 @@ function normalizeFraction(value) {
             }
             return total;
         }
-
         // No fraction, just a number
         const num = Number(value);
         return isNaN(num) ? null : num;

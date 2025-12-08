@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Scrape Recipe</h1>
+
+<div class="url-container"><input class="border p-1 w-full" id="divUrl" type="text" name="recipeUrl" placeholder="https://www.food.com/recipe/my-copycat-shrimp-paesano-64300" required>
+    <!--div id="sugStreet"></div-->
+</div>
+
+<button id="buttonScrape" type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Scrape URL</button>
+
+<form method="POST" id="recipeForm" action="/recipes/create/">
+    
+    <label>Name:</label><input type="text" name="name" id="recipeName" required class="border p-2 w-full">
+    <label>Description:</label><textarea name="description" id="recipeDescription" class="border p-2 w-full"></textarea>
+    <label>Image URL:</label><input type="text" name="image" id="recipeImage" required class="border p-2 w-full">
+
+    <img class="uploadImg" id="recipeGraphic" src="" alt="none">
+
+    <label>Servings:</label><input type="number" name="servings" min="1" id="recipeServings" class="border p-2">
+    <label>Prep Time:</label><input type="number" name="time_prep" min="1" id="recipeTimeCook" class="border p-2">
+    <label>Cook Time:</label><input type="number" name="time_cook" min="1" id="recipeTimePrep" class="border p-2">
+    <label>Total Time:</label><input type="number" name="time_total" min="1" id="recipeTimeTotal" class="border p-2">
+
+    <h2 class="text-xl font-semibold mt-4">Ingredients</h2><div id="ingredients"></div>
+    <button type="button" onclick="addIngredient()">Add Ingredient</button>
+
+    <h2 class="text-xl font-semibold mt-4">Steps</h2><div id="steps"></div>
+    <button type="button" onclick="addStep()">Add Step</button>
+    </br>
+    <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
+</form>
+
+<script src="{{ url_for('static', path='js/recipe-scrape.js') }}"></script>
+
+
+{% endblock %}

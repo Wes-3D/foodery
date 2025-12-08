@@ -14,7 +14,7 @@ assets/certs/
 assets/json/
 .old/
 .test/
-/assets/templates/alt/
+#/assets/templates/alt/
 
 #.env
 #config.py

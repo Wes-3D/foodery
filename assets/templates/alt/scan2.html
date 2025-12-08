@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule{% endblock %}
+
+{% block content %}
+
+<h1>Scan a Barcode</h1>
+
+<video id="video" width="320" height="240" style="border: 1px solid gray;" autoplay muted playsinline></video>
+<p id="result"></p>
+
+<script src="https://unpkg.com/@zxing/library@latest"></script>
+<script>
+    window.onload = async () => {
+        const codeReader = new ZXing.BrowserBarcodeReader();
+        const videoElement = document.getElementById('video');
+        const resultElement = document.getElementById('result');
+
+        try {
+            const devices = await codeReader.listVideoInputDevices();
+
+            if (devices.length === 0) {
+                resultElement.textContent = "No camera devices found.";
+                return;
+            }
+
+            const firstDeviceId = devices[0].deviceId;
+
+            codeReader.decodeFromVideoDevice(firstDeviceId, videoElement, (result, err) => {
+                if (result) {
+                    resultElement.textContent = "Scanned: " + result.text;
+
+                    // Send barcode to backend for lookup
+                    fetch("/product-lookup", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ code: result.text })
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.product) {
+                            resultElement.textContent += `\nProduct: ${data.product}`;
+                        }
+                    });
+                } else if (err && !(err instanceof ZXing.NotFoundException)) {
+                    console.error(err);
+                }
+            });
+        } catch (err) {
+            console.error("Camera access error:", err);
+            resultElement.textContent = "Unable to access camera: " + err.message;
+        }
+    };
+</script>
+{% endblock %}

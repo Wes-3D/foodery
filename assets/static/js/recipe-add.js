@@ -40,6 +40,7 @@ function populateUnitDropdown(div, inputName, style="border p-1 m-1") {
 
 function addIngredient() {
     const div = document.createElement("div");
+    div.className = 'ingredient-item';
     //addInputCell(div, title="Ingredient:", inputName="ing_name", type="text");
     addAutocompleteIngredient(div, title="Ingredient:", inputName="ing_name", type="text");
     populateUnitDropdown(div, inputName="ing_unit"); // we need a dropdown or autocomplete 
@@ -51,6 +52,7 @@ function addIngredient() {
 function addStep() {
     step_num+=1
     const div = document.createElement("div");
+    div.className = 'step-item';
     addInputCell(div, title="Step #:", inputName="step_num", type="number", value=step_num);
     addInputCell(div, title="Description:", inputName="step_desc", type="text", value=null, style="border p-1 w-full");
     document.getElementById("steps").appendChild(div);

@@ -30,6 +30,18 @@ def delete_recipe(db: Session, recipe_id: int):
 
     return
 
+def get_or_create_ingredient(db: Session, name: str):
+    ingredient = (db.query(Product).filter(Product.name.ilike(name)).first())
+
+    if ingredient:
+        return ingredient
+
+    ingredient = Product(name=name)
+    db.add(ingredient)
+    db.commit()
+    db.refresh(ingredient)
+    return ingredient
+
 
 def create_recipe(db: Session, recipe: RecipeCreate):
     db_recipe = Recipe(
@@ -63,6 +75,23 @@ def create_recipe(db: Session, recipe: RecipeCreate):
     return db_recipe
 
 
+## Scraper
+RECIPE1 = "https://www.food.com/recipe/my-copycat-shrimp-paesano-64300"
+RECIPE2 = "https://www.allrecipes.com/recipe/158968/spinach-and-feta-turkey-burgers/"
+
+def scrape_recipe_url(url=RECIPE2):
+    scraper = scrape_me(url)
+    #help(scraper) ## for a complete list of methods:
+    #recipe_title = scraper.title()
+    #recipe_instructions = scraper.instructions()
+    recipe_json = scraper.to_json()
+
+    #print(recipe_json)
+    return recipe_json
+
+
+# Removed 2nd HTML form route, added javascript route to form
+"""
 def create_recipe_form(
     db: Session,
     name: str = Form(...),
@@ -110,34 +139,4 @@ def create_recipe_form(
         db.add(step)
 
     db.commit()
-
-
-def get_or_create_ingredient(db: Session, name: str):
-    ingredient = (db.query(Product).filter(Product.name.ilike(name)).first())
-
-    if ingredient:
-        return ingredient
-
-    ingredient = Product(name=name)
-    db.add(ingredient)
-    db.commit()
-    db.refresh(ingredient)
-    return ingredient
-
-
-## Scraper
-
-RECIPE1 = "https://www.food.com/recipe/my-copycat-shrimp-paesano-64300"
-RECIPE2 = "https://www.allrecipes.com/recipe/158968/spinach-and-feta-turkey-burgers/"
-
-def scrape_recipe_url(url=RECIPE2):
-    scraper = scrape_me(url)
-    #help(scraper) ## for a complete list of methods:
-    #recipe_title = scraper.title()
-    #recipe_instructions = scraper.instructions()
-    recipe_json = scraper.to_json()
-
-    #print(recipe_json)
-    return recipe_json
-
-
+"""

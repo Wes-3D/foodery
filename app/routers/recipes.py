@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from recipe_scrapers import scrape_me
 
 from app.db.db import get_db
-from app.db.models import RecipeCreate, RecipeSchema, RecipeCreate, RecipeIngredient, RecipeStep
-from app.crud.recipes import create_recipe, create_recipe_form, get_recipe, get_recipes, delete_recipe
+from app.db.models import RecipeCreate, RecipeSchema, RecipeCreate, RecipeIngredient, RecipeStep, Recipe
+from app.crud.recipes import create_recipe, get_recipe, get_recipes, delete_recipe #, get_or_create_ingredient, create_recipe_form
 from app.crud.units import get_display_units
 from app.crud.products import get_product_list
 
@@ -64,6 +64,26 @@ def delete_recipe_route(recipe_id: int, db: Session = Depends(get_db)):
 #####     HTML Views     #####
 ##############################
 
+# HTML View All Recipes
+@router_recipes.get("/cookbook", response_class=HTMLResponse)
+def list_recipes(request: Request, db: Session = Depends(get_db)):
+    recipes = get_recipes(db)
+    return request.app.state.templates.TemplateResponse("recipes.html", {"request": request, "recipes": recipes})
+
+
+# HTML View Recipe Details
+@router_recipes.get("/cookbook/{recipe_id}", response_class=HTMLResponse)
+def view_recipe(recipe_id: int, request: Request, db: Session = Depends(get_db)):
+    recipe = get_recipe(db, recipe_id)
+    if not recipe:
+        raise HTTPException(status_code=404, detail="Recipe not found")
+    
+    ingredients = db.query(RecipeIngredient).filter(RecipeIngredient.recipe_id == recipe_id).all()
+    steps = db.query(RecipeStep).filter(RecipeStep.recipe_id == recipe_id).order_by(RecipeStep.step_number).all()
+
+    return request.app.state.templates.TemplateResponse("recipe-details.html", {"request": request, "recipe": recipe, "ingredients": ingredients, "steps": steps})
+
+
 # Add Recipe Form
 @router_recipes.get("/recipe-add", response_class=HTMLResponse)
 def recipe_form(request: Request, db: Session = Depends(get_db)):
@@ -71,6 +91,29 @@ def recipe_form(request: Request, db: Session = Depends(get_db)):
     products = get_product_list(db)
     return request.app.state.templates.TemplateResponse("recipe-add.html", {"request": request, "display_units": display_units, "products": products})
 
+
+##########################
+#####     Scraper    #####
+##########################
+
+# Scrape Recipe Form
+@router_recipes.get("/recipe-scrape", response_class=HTMLResponse)
+def recipe_scrape(request: Request):
+    return request.app.state.templates.TemplateResponse("alt/recipe-scrape.html", {"request": request})
+
+## Scraper API
+@router_recipes.get("/scrape")
+def scrape_recipe(url: str = Query(..., description="URL of a recipe page")):
+    try:
+        scraper = scrape_me(url)
+        recipe_json = scraper.to_json()
+        return recipe_json
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+# Removed 2nd HTML form route, added javascript route to form
+"""
 # Save Recipe Form
 @router_recipes.post("/recipes/create")
 def create_recipe_form_route(
@@ -115,38 +158,4 @@ def create_recipe_form_route(
     )
 
     return RedirectResponse(url=f"/cookbook", status_code=303) #/{recipe.id}
-
-
-# HTML View All Recipes
-@router_recipes.get("/cookbook", response_class=HTMLResponse)
-def list_recipes(request: Request, db: Session = Depends(get_db)):
-    recipes = get_recipes(db)
-    return request.app.state.templates.TemplateResponse("recipes.html", {"request": request, "recipes": recipes})
-
-# HTML View Recipe Details
-@router_recipes.get("/cookbook/{recipe_id}", response_class=HTMLResponse)
-def view_recipe(recipe_id: int, request: Request, db: Session = Depends(get_db)):
-    recipe = get_recipe(db, recipe_id)
-    if not recipe:
-        raise HTTPException(status_code=404, detail="Recipe not found")
-    
-    ingredients = db.query(RecipeIngredient).filter(RecipeIngredient.recipe_id == recipe_id).all()
-    steps = db.query(RecipeStep).filter(RecipeStep.recipe_id == recipe_id).order_by(RecipeStep.step_number).all()
-
-    return request.app.state.templates.TemplateResponse("recipe-details.html", {"request": request, "recipe": recipe, "ingredients": ingredients, "steps": steps})
-
-
-# Scrape Recipe Form
-@router_recipes.get("/recipe-scrape", response_class=HTMLResponse)
-def recipe_scrape(request: Request):
-    return request.app.state.templates.TemplateResponse("alt/recipe-scrape.html", {"request": request})
-
-## Scraper API
-@router_recipes.get("/scrape")
-def scrape_recipe(url: str = Query(..., description="URL of a recipe page")):
-    try:
-        scraper = scrape_me(url)
-        recipe_json = scraper.to_json()
-        return recipe_json
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+"""

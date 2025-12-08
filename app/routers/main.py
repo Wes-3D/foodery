@@ -10,4 +10,4 @@ def index(request: Request):
 ### Squirrelf AI Example ###
 @router_main.get("/example", response_class=HTMLResponse)
 def example(request: Request):
-    return request.app.state.templates.TemplateResponse("squirrelf_example.html", {"request": request})
+    return request.app.state.templates.TemplateResponse("alt/squirrelf_example.html", {"request": request})

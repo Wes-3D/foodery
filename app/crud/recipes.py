@@ -1,6 +1,6 @@
-from fastapi import HTTPException, Form
-from sqlalchemy.orm import Session
-from recipe_scrapers import scrape_me
+from fastapi import HTTPException #, Form
+from sqlmodel import Session
+#from recipe_scrapers import scrape_me
 
 from app.db.models import Recipe, RecipeCreate, RecipeIngredient, RecipeStep, Product
 
@@ -75,21 +75,6 @@ def create_recipe(db: Session, recipe: RecipeCreate):
     return db_recipe
 
 
-## Scraper
-RECIPE1 = "https://www.food.com/recipe/my-copycat-shrimp-paesano-64300"
-RECIPE2 = "https://www.allrecipes.com/recipe/158968/spinach-and-feta-turkey-burgers/"
-
-def scrape_recipe_url(url=RECIPE2):
-    scraper = scrape_me(url)
-    #help(scraper) ## for a complete list of methods:
-    #recipe_title = scraper.title()
-    #recipe_instructions = scraper.instructions()
-    recipe_json = scraper.to_json()
-
-    #print(recipe_json)
-    return recipe_json
-
-
 # Removed 2nd HTML form route, added javascript route to form
 """
 def create_recipe_form(
@@ -139,4 +124,20 @@ def create_recipe_form(
         db.add(step)
 
     db.commit()
+"""
+
+## Scraper
+"""
+RECIPE1 = "https://www.food.com/recipe/my-copycat-shrimp-paesano-64300"
+RECIPE2 = "https://www.allrecipes.com/recipe/158968/spinach-and-feta-turkey-burgers/"
+
+def scrape_recipe_url(url=RECIPE2):
+    scraper = scrape_me(url)
+    #help(scraper) ## for a complete list of methods:
+    #recipe_title = scraper.title()
+    #recipe_instructions = scraper.instructions()
+    recipe_json = scraper.to_json()
+
+    #print(recipe_json)
+    return recipe_json
 """

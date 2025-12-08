@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, Depends, Form, HTTPException, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
-from sqlalchemy.orm import Session
+from sqlmodel import Session
 from recipe_scrapers import scrape_me
 
 from app.db.db import get_db
@@ -103,7 +103,7 @@ def recipe_scrape(request: Request):
 
 ## Scraper API
 @router_recipes.get("/scrape")
-def scrape_recipe(url: str = Query(..., description="URL of a recipe page")):
+def scrape_recipe_url(url: str = Query(..., description="URL of a recipe page")):
     try:
         scraper = scrape_me(url)
         recipe_json = scraper.to_json()

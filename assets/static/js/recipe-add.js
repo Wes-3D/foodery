@@ -1,5 +1,16 @@
 let step_num = 0;
 
+// Function to calculate and update the total time
+function updateTimeTotal() {
+    const prepTime = parseInt(document.getElementsByName('time_prep')[0].value) || 0;
+    const cookTime = parseInt(document.getElementsByName('time_cook')[0].value) || 0;
+    document.getElementsByName('time_total')[0].value = prepTime + cookTime;
+}
+
+// Attach the update function to the 'input' event of the prep and cook fields
+document.getElementsByName('time_prep')[0].addEventListener('input', updateTimeTotal);
+document.getElementsByName('time_cook')[0].addEventListener('input', updateTimeTotal);
+
 function addInputCell(div, title, inputName, type, value, style="border p-1 m-1", id) {
     const label = document.createElement('label');
     const input = document.createElement('input');
@@ -43,8 +54,8 @@ function addIngredient() {
     div.className = 'ingredient-item';
     //addInputCell(div, title="Ingredient:", inputName="ing_name", type="text");
     addAutocompleteIngredient(div, title="Ingredient:", inputName="ing_name", type="text");
-    populateUnitDropdown(div, inputName="ing_unit"); // we need a dropdown or autocomplete 
-    addInputCell(div, title="Quantity:", inputName="ing_qty", type="number", value=null, style="border p-1", step="0.001"); // step="any" // "0.001" // "0.1"  // alternatively we make it a text type, and manage the input in js after, so that "1/4" is allowed
+    populateUnitDropdown(div, inputName="ing_unit");
+    addInputCell(div, title="Quantity:", inputName="ing_qty", type="text"); // step="any" // "0.001" // "0.1"  // alternatively we make it a text type, and manage the input in js after, so that "1/4" is allowed
     addInputCell(div, title="Method:", inputName="ing_method", type="text");
     document.getElementById("ingredients").appendChild(div);
 }
@@ -57,8 +68,6 @@ function addStep() {
     addInputCell(div, title="Description:", inputName="step_desc", type="text", value=null, style="border p-1 w-full");
     document.getElementById("steps").appendChild(div);
 }
-
-
 
 function addAutocompleteIngredient(div, title, inputName, type, style="border p-1") {
     //const input = document.querySelector(`input[name="${inputName}"]`);
@@ -77,8 +86,14 @@ function addAutocompleteIngredient(div, title, inputName, type, style="border p-
     suggestionBox.style.maxHeight = "150px";
     suggestionBox.style.overflowY = "auto";
     //suggestionBox.style.width = input.offsetWidth + "px";
-
     div.appendChild(suggestionBox);
+
+    // Add ingredient details inputs when ingredient is selected
+    //const ingredientDetails = document.createElement("div");
+    //ingredientDetails.style.display = "none";
+    //populateUnitDropdown(ingredientDetails, inputName="ing_unit");
+    //addInputCell(ingredientDetails, title="Quantity:", inputName="ing_qty", type="number", value=null, style="border p-1", step="0.001"); // step="any" // "0.001" // "0.1"  // alternatively we make it a text type, and manage the input in js after, so that "1/4" is allowed
+    //addInputCell(ingredientDetails, title="Method:", inputName="ing_method", type="text");
 
     input.addEventListener("input", function () {
         const query = this.value.toLowerCase();
@@ -105,6 +120,7 @@ function addAutocompleteIngredient(div, title, inputName, type, style="border p-
             option.addEventListener("click", function () {
                 input.value = match;
                 suggestionBox.style.display = "none";
+                //ingredientDetails.style.display = "inline"; // only show details if ingredient is selected
             });
             suggestionBox.appendChild(option);
         });
@@ -114,6 +130,7 @@ function addAutocompleteIngredient(div, title, inputName, type, style="border p-
 
     div.appendChild(label);
     div.appendChild(input);
+    //div.appendChild(ingredientDetails);
 
     // Hide when clicking outside
     document.addEventListener("click", (e) => {
@@ -128,4 +145,5 @@ document.addEventListener('DOMContentLoaded', async function() {
     addIngredient();
     addStep();
 });
+
 

@@ -16,22 +16,63 @@
 - need category/keyword/diet tags to create
 
 
+## Routes
+- main
+    - HTML
+        - index
+        - example
+    - API
+        - docs
+        - redoc
+- products
+    - HTML
+        - list_inventory /inventory
+        - add_product /product-add
+        - scan_product /product-scan
+    - API
+        - create_product /products/ POST
+        - list_products /products/ GET
+        - lookup_code /product-lookup
+- recipes
+    - HTML
+        - list_recipes /cookbook
+        - view_recipe /cookbook/{recipe_id}
+        - recipe_form /recipe-add
+        - recipe_scrape /recipe-scrape
+    - API
+        - read_recipes /recipes/ GET
+        - read_recipe /recipes/{recipe_id}
+        - create_recipe_route /recipes/ POST
+        - delete_recipe_route /recipe-delete/{recipe_id}
+        - scrape_recipe_url /scrape/{url}
+
+
 ## Functions
-- crud/recipes.py
+- recipes
     - get_recipe
+        - /routers/recipes.py
     - get_recipes
+        - /routers/recipes.py
     - delete_recipe
+        - /routers/recipes.py
     - create_recipe
-    - create_recipe_form
-    - get_or_create_ingredient
-    - scrape_recipe_url
+        - /routers/recipes.py
+        - get_or_create_ingredient
+    - *scrape_recipe_url*
 
-- crud/products.py
+- products
+    - **return_from_db**s
+    - **return_item_by_id**
+    - get_product_list
+        - /routers/recipes.py
 
-- crud/user.py
-
-- crud/units.py
+- units
     - get_display_units
+        - /routers/recipes.py
+
+- user
+    - create_user
+        - /db/seed.py
 
 
 ## Cleanup

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, Depends, UploadFile, File
 from fastapi.responses import HTMLResponse, JSONResponse
-from sqlalchemy.orm import Session
+from sqlmodel import Session
 from pyzbar.pyzbar import decode
 import cv2
 import numpy as np
@@ -55,7 +55,7 @@ def list_inventory(request: Request, db: Session = Depends(get_db)):
 
 # Add Product
 @router_products.get("/product-add", response_class=HTMLResponse)
-async def scan_product(request: Request):
+async def add_product(request: Request):
     return request.app.state.templates.TemplateResponse("product-scan.html", {"request": request})
 
 
@@ -78,7 +78,7 @@ async def lookup_code(data: dict):
 
 # Lookup from Scan Barcode
 @router_products.post("/product-scan", response_class=HTMLResponse)
-async def scan(request: Request, file: UploadFile = File(...)):
+async def scan_product(request: Request, file: UploadFile = File(...)):
     product = None
     try:
         # Read uploaded file & Decode image

@@ -16,70 +16,83 @@
 - need category/keyword/diet tags to create
 
 
-## Routes
-- main
-    - HTML
-        - index
-        - example
-    - API
-        - docs
-        - redoc
-- products
-    - HTML
-        - list_inventory /inventory
-        - add_product /product-add
-        - scan_product /product-scan
-    - API
-        - create_product /products/ POST
-        - list_products /products/ GET
-        - lookup_code /product-lookup
-- recipes
-    - HTML
-        - list_recipes /cookbook
-        - view_recipe /cookbook/{recipe_id}
-        - recipe_form /recipe-add
-        - recipe_scrape /recipe-scrape
-    - API
-        - read_recipes /recipes/ GET
-        - read_recipe /recipes/{recipe_id}
-        - create_recipe_route /recipes/ POST
-        - delete_recipe_route /recipe-delete/{recipe_id}
-        - scrape_recipe_url /scrape/{url}
+## Functions/Code
+
+### Main
+- HTML
+    - index
+    - example
+- API
+    - docs
+    - redoc
 
 
-## Functions
-- recipes
-    - get_recipe
-        - /routers/recipes.py
-    - get_recipes
-        - /routers/recipes.py
-    - delete_recipe
-        - /routers/recipes.py
-    - create_recipe
-        - /routers/recipes.py
-        - get_or_create_ingredient
-    - *scrape_recipe_url*
+### Products
+- HTML
+    - list_inventory /inventory
+    - add_product /product-add
+    - scan_product /product-scan
+- API
+    - create_product /products/ POST
+    - list_products /products/ GET
+    - lookup_code /product-lookup
 
-- products
+- CRUD
     - **return_from_db**s
     - **return_item_by_id**
     - get_product_list
-        - /routers/recipes.py
+        - /routers/recipes.recipe_form
 
-- units
+### Recipes
+- HTML
+    - list_recipes /cookbook
+        - CRUD get_recipes
+    - view_recipe /cookbook/{recipe_id}
+        - CRUD get_recipe
+    - recipe_form /recipe-add
+        - CRUD get_product_list
+        - CRUD get_display_units
+    - recipe_scrape /recipe-scrape
+
+- API
+    - read_recipes /recipes/ GET
+        - CRUD get_recipes
+    - read_recipe /recipes/{recipe_id}
+        - CRUD get_recipe
+    - create_recipe_route /recipes/ POST
+        - CRUD create_recipe
+    - delete_recipe_route /recipe-delete/{recipe_id}
+        - CRUD delete_recipe
+    - scrape_recipe_url /scrape/{url}
+
+- CRUD
+    - get_recipe
+        - /routers/recipes.read_recipe(recipe_id)
+        - /routers/recipes.view_recipe(recipe_id)
+    - get_recipes
+        - /routers/recipes.list_recipes
+        - /routers/recipes.read_recipes
+    - delete_recipe
+        - /routers/recipes.delete_recipe_route
+    - create_recipe
+        - /routers/recipes.create_recipe_route
+        - get_or_create_ingredient
+    - *scrape_recipe_url*
+
+
+### Units
+- CRUD
     - get_display_units
-        - /routers/recipes.py
+        - /routers/recipes.recipe_form
 
-- user
+
+### User
+- CRUD
     - create_user
         - /db/seed.py
 
 
 ## Cleanup
-
-- RecipeCreate: 
-    - separate functions for accepting HTML form and JSON
-    - can they be combined into 1 route or need to stay separate?
 
 - add attributes to Recipe
 - templates, settings in app 'request' state

@@ -104,6 +104,26 @@ class RecipeSchema(RecipeBase):
     class Config:
         from_attributes = True
 
+"""
+class RecipeIngredientRead(RecipeIngredientBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class RecipeStepRead(RecipeStepBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+"""
+class RecipeRead(RecipeBase):
+    id: int
+    ingredients: List[RecipeIngredientBase] = [] # Include nested ingredients
+    steps: List[RecipeStepBase] = []             # Include nested steps
+
+    class Config:
+        from_attributes = True
 
 ## Models
 

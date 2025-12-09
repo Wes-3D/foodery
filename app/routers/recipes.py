@@ -4,7 +4,7 @@ from sqlmodel import Session
 from recipe_scrapers import scrape_me
 
 from app.db.db import get_db
-from app.db.models import RecipeCreate, RecipeSchema, RecipeCreate, RecipeIngredient, RecipeStep, Recipe
+from app.db.models import RecipeCreate, RecipeSchema, RecipeCreate, RecipeIngredient, RecipeStep, Recipe, RecipeRead
 from app.crud.recipes import create_recipe, get_recipe, get_recipes, delete_recipe #, get_or_create_ingredient, create_recipe_form
 from app.crud.units import get_display_units
 from app.crud.products import get_product_list
@@ -16,12 +16,12 @@ router_recipes = APIRouter()
 ##############################
 
 # API View All Recipes
-@router_recipes.get("/recipes/", response_model=list[RecipeSchema])
+@router_recipes.get("/recipes/", response_model=list[RecipeRead])
 def read_recipes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     return get_recipes(db, skip=skip, limit=limit)
 
 # API View Recipe
-@router_recipes.get("/recipes/{recipe_id}", response_model=RecipeSchema)
+@router_recipes.get("/recipes/{recipe_id}", response_model=RecipeRead)
 def read_recipe(recipe_id: int, db: Session = Depends(get_db)):
     db_recipe = get_recipe(db, recipe_id)
     if not db_recipe:
@@ -77,11 +77,9 @@ def view_recipe(recipe_id: int, request: Request, db: Session = Depends(get_db))
     recipe = get_recipe(db, recipe_id)
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")
-    
-    ingredients = db.query(RecipeIngredient).filter(RecipeIngredient.recipe_id == recipe_id).all()
-    steps = db.query(RecipeStep).filter(RecipeStep.recipe_id == recipe_id).order_by(RecipeStep.step_number).all()
-
-    return request.app.state.templates.TemplateResponse("recipe-details.html", {"request": request, "recipe": recipe, "ingredients": ingredients, "steps": steps})
+    #ingredients = db.query(RecipeIngredient).filter(RecipeIngredient.recipe_id == recipe_id).all()
+    #steps = db.query(RecipeStep).filter(RecipeStep.recipe_id == recipe_id).order_by(RecipeStep.step_number).all()
+    return request.app.state.templates.TemplateResponse("recipe-details.html", {"request": request, "recipe": recipe.dict()}) #, "ingredients": ingredients, "steps": steps
 
 
 # Add Recipe Form

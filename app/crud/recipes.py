@@ -2,11 +2,14 @@ from fastapi import HTTPException #, Form
 from sqlmodel import Session
 #from recipe_scrapers import scrape_me
 
-from app.db.models import Recipe, RecipeCreate, RecipeIngredient, RecipeStep, Product
+from app.db.models import Recipe, RecipeCreate, RecipeIngredient, RecipeStep, Product, RecipeRead
 
 
 def get_recipe(db: Session, recipe_id: int):
-    return db.query(Recipe).filter(Recipe.id == recipe_id).first()
+    recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
+    recipe_schema = RecipeRead.model_validate(recipe)
+
+    return recipe_schema
 
 
 def get_recipes(db: Session, skip: int = 0, limit: int = 10):

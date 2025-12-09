@@ -66,25 +66,25 @@ API
     - CRUD delete_recipe
 - scrape_recipe_url /scrape/{url}
 
-- CRUD
-    - get_recipe
-        - /routers/recipes.read_recipe(recipe_id)
-        - /routers/recipes.view_recipe(recipe_id)
-    - get_recipes
-        - /routers/recipes.list_recipes
-        - /routers/recipes.read_recipes
-    - delete_recipe
-        - /routers/recipes.delete_recipe_route
-    - create_recipe
-        - /routers/recipes.create_recipe_route
-        - get_or_create_ingredient
-    - *scrape_recipe_url*
+CRUD
+- get_recipe
+    - /routers/recipes.read_recipe(recipe_id)
+    - /routers/recipes.view_recipe(recipe_id)
+- get_recipes
+    - /routers/recipes.list_recipes
+    - /routers/recipes.read_recipes
+- delete_recipe
+    - /routers/recipes.delete_recipe_route
+- create_recipe
+    - /routers/recipes.create_recipe_route
+    - get_or_create_ingredient
+- *scrape_recipe_url*
 
 
 ### Units
-- CRUD
-    - get_display_units
-        - /routers/recipes.recipe_form
+CRUD
+- get_display_units
+    - /routers/recipes.recipe_form
 
 
 ### User

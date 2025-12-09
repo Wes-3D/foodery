@@ -8,7 +8,7 @@ import openfoodfacts
 
 from app.db.db import get_db
 from app.db.models import Product, ProductSchema, ProductCreate
-
+#from app.models import Product, ProductSchema, ProductCreate
 
 food_api = openfoodfacts.API(user_agent="MyAwesomeApp/1.0", country=openfoodfacts.Country.us, timeout=10)
 router_products = APIRouter()

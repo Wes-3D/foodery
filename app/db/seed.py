@@ -1,6 +1,7 @@
 from sqlmodel import Session, select
 
 from app.db.models import User, UserCreate, MeasureUnit, Product
+#from app.models import User, UserCreate, MeasureUnit, Product
 from app.crud.user import create_user
 from assets.data.units.mealie_units import measure_units
 from assets.data.products.tandoor_foods import tandoor_json

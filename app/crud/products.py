@@ -1,5 +1,6 @@
 from sqlmodel import Session
 from app.db.models import Product
+#from app.models import Product
 
 # Generic getter — list all records
 def return_from_db(db: Session, modelClass):

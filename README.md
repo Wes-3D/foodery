@@ -77,34 +77,33 @@
         │
         ├─ main.py
         ├─ core/
-        │   └── log.py
-        │
-        ├─ api/
-        │   ├── __init__.py
-        │   ├── router.py
-        │   ├── ingredients.py
-        │   └── recipes.py
+        │  ├─ config.py
+        │  ├─ log.py
+        │  └─ security.py
         │
         ├─ db/
-        │   ├── __init__.py
-        │   ├── base.py
-        │   ├── session.py
-        │   └── init_db.py
+        │  ├─ __init__.py
+        │  ├─ base.py
+        │  ├─ session.py
+        │  └─ init_db.py
         │
         ├─ models/
-        │   ├── __init__.py
-        │   ├── product.py
-        │   ├── recipe.py
-        │   └── recipe_step.py
+        │  ├─ __init__.py
+        │  ├─ product.py
+        │  ├─ recipe.py
+        │  ├─ units.py
+        │  └─ users.py
         │
-        ├─ schemas/
-        │   ├── __init__.py
-        │   ├── product.py
-        │   ├── recipe.py
-        │   └── recipe_step.py
+        ├─ crud/
+        │  ├─ __init__.py
+        │  ├─ product.py
+        │  ├─ recipe.py
+        │  ├─ units.py
+        │  └─ users.py
         │
-        └─ crud/
+        └─ routers/
            ├─ __init__.py
+           ├─ main.py
            ├─ product.py
            └─ recipe.py
 

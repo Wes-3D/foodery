@@ -44,48 +44,43 @@
         - /routers/recipes.recipe_form
 
 ### Recipes
-
-HTML
-- list_recipes /cookbook
-    - CRUD get_recipes
-- view_recipe /cookbook/{recipe_id}
-    - CRUD get_recipe
-- recipe_form /recipe-add
-    - CRUD get_product_list
-    - CRUD get_display_units
-- recipe_scrape /recipe-scrape
-
-API
-- read_recipes /recipes/ GET
-    - CRUD get_recipes
-- read_recipe /recipes/{recipe_id}
-    - CRUD get_recipe
-- create_recipe_route /recipes/ POST
-    - CRUD create_recipe
-- delete_recipe_route /recipe-delete/{recipe_id}
-    - CRUD delete_recipe
-- scrape_recipe_url /scrape/{url}
-
-CRUD
-- get_recipe
-    - /routers/recipes.read_recipe(recipe_id)
-    - /routers/recipes.view_recipe(recipe_id)
-- get_recipes
-    - /routers/recipes.list_recipes
-    - /routers/recipes.read_recipes
-- delete_recipe
-    - /routers/recipes.delete_recipe_route
-- create_recipe
-    - /routers/recipes.create_recipe_route
-    - get_or_create_ingredient
-- *scrape_recipe_url*
-
+- HTML
+    - list_recipes /cookbook
+        - CRUD get_recipes
+    - view_recipe /cookbook/{recipe_id}
+        - CRUD get_recipe
+    - recipe_form /recipe-add
+        - CRUD get_product_list
+        - CRUD get_display_units
+    - recipe_scrape /recipe-scrape
+- API
+    - read_recipes /recipes/ GET
+        - CRUD get_recipes
+    - read_recipe /recipes/{recipe_id}
+        - CRUD get_recipe
+    - create_recipe_route /recipes/ POST
+        - CRUD create_recipe
+    - delete_recipe_route /recipe-delete/{recipe_id}
+        - CRUD delete_recipe
+    - scrape_recipe_url /scrape/{url}
+- CRUD
+    - get_recipe
+        - /routers/recipes.read_recipe(recipe_id)
+        - /routers/recipes.view_recipe(recipe_id)
+    - get_recipes
+        - /routers/recipes.list_recipes
+        - /routers/recipes.read_recipes
+    - delete_recipe
+        - /routers/recipes.delete_recipe_route
+    - create_recipe
+        - /routers/recipes.create_recipe_route
+        - get_or_create_ingredient
+    - *scrape_recipe_url*
 
 ### Units
-CRUD
-- get_display_units
-    - /routers/recipes.recipe_form
-
+- CRUD
+    - get_display_units
+        - /routers/recipes.recipe_form
 
 ### User
 - CRUD

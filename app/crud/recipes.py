@@ -3,6 +3,7 @@ from sqlmodel import Session
 #from recipe_scrapers import scrape_me
 
 from app.db.models import Recipe, RecipeCreate, RecipeIngredient, RecipeStep, Product, RecipeRead
+#from app.models import Recipe, RecipeCreate, RecipeIngredient, RecipeStep, Product, RecipeRead
 
 
 def get_recipe(db: Session, recipe_id: int):

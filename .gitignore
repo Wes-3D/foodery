@@ -14,9 +14,10 @@ assets/certs/
 assets/json/
 .old/
 .test/
-#/assets/templates/alt/
+#assets/templates/alt/
 
 #.env
 #config.py
 scraper.py
 import_ingredients.py
+app/models/
